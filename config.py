@@ -13,8 +13,8 @@ class Config:
     _db_url = os.environ.get("DATABASE_URL", "sqlite:///" + os.path.join(basedir, "kukucha.db"))
     if _db_url.startswith("postgres://"):
         _db_url = _db_url.replace("postgres://", "postgresql://", 1)
-    SQLALCHEMY_DATABASE_URI = _db_url
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+if _db_url.startswith("postgresql://"):
+        _db_url = _db_url.replace("postgresql://", "postgresql+pg8000://", 1)    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     UPLOAD_FOLDER_PRODUCTS = os.path.join(basedir, "static", "uploads", "products")
     UPLOAD_FOLDER_RECEIPTS = os.path.join(basedir, "static", "uploads", "receipts")
