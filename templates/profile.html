@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="flex items-center gap-4 mb-6">
+  <div class="w-16 h-16 rounded-full bg-beige flex items-center justify-center text-2xl font-extrabold text-coffee">
+    {{ current_user.full_name[0]|upper }}
+  </div>
+  <div>
+    <p class="font-extrabold">{{ current_user.full_name }}</p>
+    <p class="text-sm text-espresso/50">{{ current_user.phone }}</p>
+  </div>
+  <a href="{{ url_for('auth.logout') }}" class="ml-auto text-sm font-semibold text-red-500">Баромадан</a>
+</div>
+
+{% if current_user.is_admin %}
+<a href="{{ url_for('admin.dashboard') }}" class="block card-premium rounded-2xl p-4 mb-6 text-center font-bold text-coffee">⚙️ Панели админ</a>
+{% endif %}
+
+<h2 class="text-lg font-extrabold mb-3">Фармоишҳои ман</h2>
+{% if orders %}
+<div class="space-y-3">
+  {% for order in orders %}
+  <a href="{{ url_for('orders.order_detail', order_id=order.id) }}" class="card-premium rounded-2xl p-4 flex items-center justify-between block">
+    <div>
+      <p class="text-sm font-bold">Фармоиш #{{ order.id }}</p>
+      <p class="text-xs text-espresso/50">{{ order.created_at.strftime('%d.%m.%Y') }} · {{ "%.0f"|format(order.total_amount) }} с.</p>
+    </div>
+    <span class="status-pill" style="background:{{ order.status_color }}">{{ order.status_label }}</span>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<p class="text-center text-espresso/50 py-10">Шумо ҳанӯз фармоише надоред.</p>
+{% endif %}
+{% endblock %}

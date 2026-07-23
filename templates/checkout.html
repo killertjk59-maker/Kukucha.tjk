@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="text-xl font-extrabold mb-4">Расмиёти фармоиш</h1>
+
+<div class="grid sm:grid-cols-3 gap-6">
+  <form method="post" class="sm:col-span-2 card-premium rounded-3xl p-5 space-y-4">
+    <div>
+      <label class="text-xs font-bold text-espresso/60">Ном ва насаб *</label>
+      <input type="text" name="customer_name" required value="{{ current_user.full_name }}"
+             class="w-full mt-1 rounded-xl border border-latte/40 px-4 py-2.5 text-sm">
+    </div>
+    <div>
+      <label class="text-xs font-bold text-espresso/60">Рақами телефон *</label>
+      <input type="text" name="phone" required value="{{ current_user.phone }}"
+             class="w-full mt-1 rounded-xl border border-latte/40 px-4 py-2.5 text-sm">
+    </div>
+    <div>
+      <label class="text-xs font-bold text-espresso/60">Шаҳр *</label>
+      <input type="text" name="city" required placeholder="Душанбе"
+             class="w-full mt-1 rounded-xl border border-latte/40 px-4 py-2.5 text-sm">
+    </div>
+    <div>
+      <label class="text-xs font-bold text-espresso/60">Суроға *</label>
+      <input type="text" name="street_address" required placeholder="Кӯча, хона, манзил"
+             class="w-full mt-1 rounded-xl border border-latte/40 px-4 py-2.5 text-sm">
+    </div>
+    <div>
+      <label class="text-xs font-bold text-espresso/60">Шарҳ</label>
+      <textarea name="comment" rows="2" class="w-full mt-1 rounded-xl border border-latte/40 px-4 py-2.5 text-sm"></textarea>
+    </div>
+    <button type="submit" class="btn-primary w-full rounded-full py-3.5 font-bold text-sm shadow-premium">Идома ба пардохт</button>
+  </form>
+
+  <div class="card-premium rounded-3xl p-5 h-fit">
+    <h2 class="font-bold text-sm mb-3">Маҳсулоти сабад ({{ items|length }})</h2>
+    <div class="space-y-2 mb-4 max-h-64 overflow-y-auto">
+      {% for item in items %}
+      <div class="flex justify-between text-xs">
+        <span class="line-clamp-1 flex-1">{{ item.product.name }} × {{ item.quantity }}</span>
+        <span class="font-bold shrink-0 ml-2">{{ "%.0f"|format(item.subtotal) }} с.</span>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="border-t border-latte/30 pt-3 flex justify-between font-extrabold">
+      <span>Ҳамагӣ</span><span>{{ "%.0f"|format(total) }} с.</span>
+    </div>
+  </div>
+</div>
+{% endblock %}

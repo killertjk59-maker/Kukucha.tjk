@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-md mx-auto">
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="text-xl font-extrabold">Фармоиш #{{ order.id }}</h1>
+    <span class="status-pill" style="background:{{ order.status_color }}">{{ order.status_label }}</span>
+  </div>
+
+  <div class="card-premium rounded-2xl p-4 mb-4 text-sm space-y-1">
+    <p><span class="text-espresso/50">Мизоҷ:</span> {{ order.customer_name }}</p>
+    <p><span class="text-espresso/50">Телефон:</span> {{ order.phone }}</p>
+    <p><span class="text-espresso/50">Суроға:</span> {{ order.city }}, {{ order.street_address }}</p>
+    {% if order.comment %}<p><span class="text-espresso/50">Шарҳ:</span> {{ order.comment }}</p>{% endif %}
+  </div>
+
+  <div class="card-premium rounded-2xl p-4 mb-4">
+    <h2 class="font-bold text-sm mb-2">Маҳсулот</h2>
+    {% for item in order.items %}
+    <div class="flex justify-between text-sm py-1">
+      <span>{{ item.product_name }} × {{ item.quantity }}</span>
+      <span class="font-bold">{{ "%.0f"|format(item.subtotal) }} с.</span>
+    </div>
+    {% endfor %}
+    <div class="border-t border-latte/30 mt-2 pt-2 flex justify-between font-extrabold">
+      <span>Ҳамагӣ</span><span>{{ "%.0f"|format(order.total_amount) }} с.</span>
+    </div>
+  </div>
+
+  {% if order.status == "awaiting_payment" %}
+  <a href="{{ url_for('orders.payment', order_id=order.id) }}" class="btn-primary block text-center rounded-full py-3.5 font-bold text-sm shadow-premium">Идома ба пардохт</a>
+  {% endif %}
+
+  {% if order.receipt_filename %}
+  <div class="mt-4">
+    <p class="text-xs text-espresso/50 mb-2">Скриншоти чек</p>
+    <img src="{{ url_for('static', filename='uploads/receipts/' + order.receipt_filename) }}" class="rounded-2xl card-premium">
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

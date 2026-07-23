@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% from "_product_card.html" import product_card %}
+{% block content %}
+
+<section class="rounded-4xl bg-gradient-to-br from-latte/60 via-beige to-cream p-8 sm:p-14 mb-8 relative overflow-hidden fade-in">
+  <div class="relative z-10 max-w-md">
+    <p class="uppercase tracking-widest text-xs font-bold text-coffee/70 mb-2">Kukucha.tjk</p>
+    <h1 class="text-3xl sm:text-4xl font-extrabold leading-tight mb-3">Барои кӯдакони шумо, бо муҳаббат</h1>
+    <p class="text-espresso/70 mb-5">Либос, пойафзол ва бозичаҳои сифатнок дар як ҷо.</p>
+    <a href="{{ url_for('main.categories') }}" class="btn-primary inline-block rounded-full px-6 py-3 text-sm font-bold shadow-premium">Хариди худро оғоз кунед</a>
+  </div>
+  <div class="absolute -right-6 -bottom-6 text-[160px] opacity-20 select-none">🧸</div>
+</section>
+
+<section class="mb-8">
+  <h2 class="text-lg font-extrabold mb-3">Категорияҳо</h2>
+  <div class="flex gap-3 overflow-x-auto pb-2">
+    {% for c in categories %}
+    <a href="{{ url_for('main.category', slug=c.slug) }}" class="shrink-0 card-premium rounded-3xl px-5 py-4 flex flex-col items-center gap-1 w-24">
+      <span class="text-2xl">{{ c.icon }}</span>
+      <span class="text-xs font-semibold text-center">{{ c.name }}</span>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+{% if featured %}
+<section class="mb-8">
+  <h2 class="text-lg font-extrabold mb-3">Тавсияшуда</h2>
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    {% for p in featured %}{{ product_card(p) }}{% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if on_sale %}
+<section class="mb-8">
+  <h2 class="text-lg font-extrabold mb-3">🔥 Аксияҳо</h2>
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    {% for p in on_sale %}{{ product_card(p) }}{% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if new_arrivals %}
+<section class="mb-8">
+  <h2 class="text-lg font-extrabold mb-3">Навгониҳо</h2>
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    {% for p in new_arrivals %}{{ product_card(p) }}{% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if not categories %}
+<div class="text-center py-16 text-espresso/50">
+  <p class="text-4xl mb-3">🛍️</p>
+  <p>Ҳоло маҳсулот нест. Аз панели админ илова кунед.</p>
+</div>
+{% endif %}
+
+{% endblock %}

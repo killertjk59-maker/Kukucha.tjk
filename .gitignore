@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.env
+kukucha.db
+static/uploads/products/*
+static/uploads/receipts/*
+!static/uploads/products/.gitkeep
+!static/uploads/receipts/.gitkeep

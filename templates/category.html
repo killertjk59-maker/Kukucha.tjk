@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% from "_product_card.html" import product_card %}
+{% block content %}
+<div class="flex items-center justify-between mb-4">
+  <h1 class="text-xl font-extrabold">{{ category.icon }} {{ category.name }}</h1>
+  <form method="get" class="text-sm">
+    <select name="sort" onchange="this.form.submit()" class="rounded-full border border-latte/40 bg-white px-3 py-1.5 text-xs font-semibold">
+      <option value="new" {{ 'selected' if sort=='new' }}>Навтарин</option>
+      <option value="price_asc" {{ 'selected' if sort=='price_asc' }}>Нарх: арзон → қимат</option>
+      <option value="price_desc" {{ 'selected' if sort=='price_desc' }}>Нарх: қимат → арзон</option>
+    </select>
+  </form>
+</div>
+
+{% if products %}
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+  {% for p in products %}{{ product_card(p) }}{% endfor %}
+</div>
+{% else %}
+<p class="text-center text-espresso/50 py-16">Дар ин категория ҳоло маҳсулот нест.</p>
+{% endif %}
+{% endblock %}

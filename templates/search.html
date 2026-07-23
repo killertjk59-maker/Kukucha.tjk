@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% from "_product_card.html" import product_card %}
+{% block content %}
+<h1 class="text-xl font-extrabold mb-4">Натиҷаи ҷустуҷӯ: "{{ query }}"</h1>
+{% if products %}
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+  {% for p in products %}{{ product_card(p) }}{% endfor %}
+</div>
+{% else %}
+<p class="text-center text-espresso/50 py-16">Ҳеҷ чиз ёфт нашуд.</p>
+{% endif %}
+{% endblock %}

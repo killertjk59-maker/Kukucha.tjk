@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="text-xl font-extrabold mb-4">Сабади харид</h1>
+
+{% if items %}
+<div class="space-y-3 mb-6">
+  {% for item in items %}
+  <div class="card-premium rounded-2xl p-3 flex gap-3 items-center">
+    <div class="w-16 h-16 rounded-xl overflow-hidden bg-beige shrink-0">
+      {% if item.product.main_image %}
+        <img src="{{ url_for('static', filename='uploads/products/' + item.product.main_image) }}" class="w-full h-full object-cover">
+      {% else %}
+        <div class="w-full h-full flex items-center justify-center text-2xl">🧸</div>
+      {% endif %}
+    </div>
+    <div class="flex-1 min-w-0">
+      <a href="{{ url_for('main.product_detail', slug=item.product.slug) }}" class="text-sm font-semibold line-clamp-1">{{ item.product.name }}</a>
+      <p class="text-sm font-extrabold mt-1">{{ "%.0f"|format(item.product.price) }} с.</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <form action="{{ url_for('cart.update_cart', item_id=item.id) }}" method="post">
+        <input type="hidden" name="action" value="decrease">
+        <button class="w-7 h-7 rounded-full bg-beige font-bold">−</button>
+      </form>
+      <span class="text-sm font-bold w-5 text-center">{{ item.quantity }}</span>
+      <form action="{{ url_for('cart.update_cart', item_id=item.id) }}" method="post">
+        <input type="hidden" name="action" value="increase">
+        <button class="w-7 h-7 rounded-full bg-beige font-bold">+</button>
+      </form>
+    </div>
+    <form action="{{ url_for('cart.remove_from_cart', item_id=item.id) }}" method="post">
+      <button class="text-espresso/40 hover:text-red-500 text-lg px-1">✕</button>
+    </form>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="card-premium rounded-2xl p-5 flex items-center justify-between">
+  <div>
+    <p class="text-xs text-espresso/50">Нархи умумӣ</p>
+    <p class="text-xl font-extrabold">{{ "%.0f"|format(total) }} с.</p>
+  </div>
+  <a href="{{ url_for('orders.checkout') }}" class="btn-primary rounded-full px-6 py-3 text-sm font-bold shadow-premium">Расмиёти фармоиш</a>
+</div>
+
+{% else %}
+<div class="text-center py-16 text-espresso/50">
+  <p class="text-4xl mb-3">🛒</p>
+  <p>Сабади шумо холист.</p>
+  <a href="{{ url_for('main.index') }}" class="text-coffee font-semibold underline mt-2 inline-block">Ба хариди худ идома диҳед</a>
+</div>
+{% endif %}
+{% endblock %}

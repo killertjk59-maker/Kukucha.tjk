@@ -1,0 +1,62 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-extrabold">Фармоиш #{{ order.id }}</h1>
+  <span class="status-pill" style="background:{{ order.status_color }}">{{ order.status_label }}</span>
+</div>
+
+<div class="grid sm:grid-cols-2 gap-6">
+  <div class="space-y-4">
+    <div class="card-premium rounded-2xl p-4 text-sm space-y-1">
+      <p class="font-bold mb-2">Маълумоти мизоҷ</p>
+      <p><span class="text-espresso/50">Ном:</span> {{ order.customer_name }}</p>
+      <p><span class="text-espresso/50">Телефон:</span> {{ order.phone }}</p>
+      <p><span class="text-espresso/50">Шаҳр:</span> {{ order.city }}</p>
+      <p><span class="text-espresso/50">Суроға:</span> {{ order.street_address }}</p>
+      {% if order.comment %}<p><span class="text-espresso/50">Шарҳ:</span> {{ order.comment }}</p>{% endif %}
+    </div>
+
+    <div class="card-premium rounded-2xl p-4">
+      <p class="font-bold mb-2 text-sm">Маҳсулот</p>
+      {% for item in order.items %}
+      <div class="flex justify-between text-sm py-1">
+        <span>{{ item.product_name }} × {{ item.quantity }}</span>
+        <span class="font-bold">{{ "%.0f"|format(item.subtotal) }} с.</span>
+      </div>
+      {% endfor %}
+      <div class="border-t border-latte/30 mt-2 pt-2 flex justify-between font-extrabold">
+        <span>Ҳамагӣ</span><span>{{ "%.0f"|format(order.total_amount) }} с.</span>
+      </div>
+    </div>
+
+    {% if order.status == "awaiting_confirmation" %}
+    <div class="flex gap-3">
+      <form action="{{ url_for('admin.order_confirm', order_id=order.id) }}" method="post" class="flex-1">
+        <button class="w-full bg-green-600 text-white rounded-full py-3 font-bold text-sm">✅ Тасдиқ кардан</button>
+      </form>
+      <form action="{{ url_for('admin.order_reject', order_id=order.id) }}" method="post" class="flex-1">
+        <button class="w-full bg-red-500 text-white rounded-full py-3 font-bold text-sm">❌ Рад кардан</button>
+      </form>
+    </div>
+    {% endif %}
+
+    <form action="{{ url_for('admin.order_update_status', order_id=order.id) }}" method="post" class="card-premium rounded-2xl p-4 flex gap-2 items-center">
+      <select name="status" class="flex-1 rounded-xl border border-latte/40 px-3 py-2 text-sm">
+        {% for value, label in statuses %}
+        <option value="{{ value }}" {{ 'selected' if order.status==value }}>{{ label }}</option>
+        {% endfor %}
+      </select>
+      <button class="btn-primary rounded-xl px-4 py-2 text-sm font-bold">Нав кардан</button>
+    </form>
+  </div>
+
+  <div>
+    {% if order.receipt_filename %}
+    <p class="font-bold text-sm mb-2">Скриншоти чек</p>
+    <img src="{{ url_for('static', filename='uploads/receipts/' + order.receipt_filename) }}" class="rounded-2xl card-premium w-full">
+    {% else %}
+    <p class="text-espresso/50 text-sm">Чек ҳанӯз фиристода нашудааст.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

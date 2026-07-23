@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-sm mx-auto">
+  <h1 class="text-xl font-extrabold mb-1 text-center">Ворид шудан</h1>
+  <p class="text-sm text-espresso/50 text-center mb-6">Ба Kukucha.tjk хуш омадед</p>
+
+  <form method="post" class="card-premium rounded-3xl p-5 space-y-4">
+    <div>
+      <label class="text-xs font-bold text-espresso/60">Рақами телефон</label>
+      <input type="text" name="phone" required autofocus class="w-full mt-1 rounded-xl border border-latte/40 px-4 py-2.5 text-sm">
+    </div>
+    <div>
+      <label class="text-xs font-bold text-espresso/60">Рамз</label>
+      <input type="password" name="password" required class="w-full mt-1 rounded-xl border border-latte/40 px-4 py-2.5 text-sm">
+    </div>
+    <button type="submit" class="btn-primary w-full rounded-full py-3 font-bold text-sm shadow-premium">Ворид шудан</button>
+  </form>
+  <p class="text-center text-sm mt-4 text-espresso/60">
+    Ҳисоб надоред? <a href="{{ url_for('auth.register') }}" class="text-coffee font-bold">Сабти ном</a>
+  </p>
+</div>
+{% endblock %}

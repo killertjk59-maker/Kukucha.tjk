@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-md mx-auto">
+  <h1 class="text-xl font-extrabold mb-4 text-center">Пардохт</h1>
+
+  <div class="card-premium rounded-3xl p-6 bg-gradient-to-br from-espresso to-coffee text-white mb-6 shadow-premium">
+    <p class="text-xs opacity-70 mb-1">Корти Душанбе Сити</p>
+    <p class="text-2xl font-extrabold tracking-widest mb-4">{{ config.ADMIN_CARD_NUMBER }}</p>
+    <p class="text-sm opacity-90">{{ config.ADMIN_CARD_HOLDER }}</p>
+  </div>
+
+  <div class="card-premium rounded-2xl p-4 mb-6 text-center">
+    <p class="text-xs text-espresso/50">Маблағи фармоиш</p>
+    <p class="text-2xl font-extrabold">{{ "%.0f"|format(order.total_amount) }} с.</p>
+  </div>
+
+  <p class="text-sm text-espresso/70 mb-4 text-center">
+    Лутфан маблағро ба корти дар боло нишондодашуда гузаронед ва скриншоти чекро дар зер боргузорӣ кунед.
+  </p>
+
+  <form method="post" enctype="multipart/form-data" class="card-premium rounded-3xl p-5">
+    <label class="block text-xs font-bold text-espresso/60 mb-2">Скриншоти чек *</label>
+    <input type="file" name="receipt" accept="image/*" required
+           class="w-full text-sm mb-4 file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-beige file:text-espresso file:font-semibold">
+    <button type="submit" class="btn-primary w-full rounded-full py-3.5 font-bold text-sm shadow-premium">Фиристодани чек</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<h1 class="text-2xl font-extrabold mb-6">{{ 'Таҳрири маҳсулот' if product else 'Маҳсулоти нав' }}</h1>
+
+<form method="post" enctype="multipart/form-data" class="card-premium rounded-3xl p-6 space-y-4 max-w-2xl">
+  <div>
+    <label class="text-xs font-bold text-espresso/60">Ном *</label>
+    <input type="text" name="name" required value="{{ product.name if product else '' }}" class="w-full mt-1 rounded-xl border border-latte/40 px-4 py-2.5 text-sm">
+  </div>
+
+  <div>
+    <label class="text-xs font-bold text-espresso/60">Тавсиф</label>
+    <textarea name="description" rows="4" class="w-full mt-1 rounded-xl border border-latte/40 px-4 py-2.5 text-sm">{{ product.description if product else '' }}</textarea>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="text-xs font-bold text-espresso/60">Нарх *</label>
+      <input type="number" step="0.01" name="price" required value="{{ product.price if product else '' }}" class="w-full mt-1 rounded-xl border border-latte/40 px-4 py-2.5 text-sm">
+    </div>
+    <div>
+      <label class="text-xs font-bold text-espresso/60">Нархи кӯҳна</label>
+      <input type="number" step="0.01" name="old_price" value="{{ product.old_price if product and product.old_price else '' }}" class="w-full mt-1 rounded-xl border border-latte/40 px-4 py-2.5 text-sm">
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="text-xs font-bold text-espresso/60">Категория *</label>
+      <select name="category_id" required class="w-full mt-1 rounded-xl border border-latte/40 px-4 py-2.5 text-sm">
+        {% for c in categories %}
+        <option value="{{ c.id }}" {{ 'selected' if product and product.category_id==c.id }}>{{ c.icon }} {{ c.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="text-xs font-bold text-espresso/60">Бренд</label>
+      <input type="text" name="brand" value="{{ product.brand if product else '' }}" class="w-full mt-1 rounded-xl border border-latte/40 px-4 py-2.5 text-sm">
+    </div>
+  </div>
+
+  <div class="grid grid-cols-3 gap-4">
+    <div>
+      <label class="text-xs font-bold text-espresso/60">Кишвар</label>
+      <input type="text" name="country" value="{{ product.country if product else '' }}" class="w-full mt-1 rounded-xl border border-latte/40 px-4 py-2.5 text-sm">
+    </div>
+    <div>
+      <label class="text-xs font-bold text-espresso/60">Синну сол</label>
+      <input type="text" name="age_range" placeholder="0-2 сола" value="{{ product.age_range if product else '' }}" class="w-full mt-1 rounded-xl border border-latte/40 px-4 py-2.5 text-sm">
+    </div>
+    <div>
+      <label class="text-xs font-bold text-espresso/60">Ранг</label>
+      <input type="text" name="color" value="{{ product.color if product else '' }}" class="w-full mt-1 rounded-xl border border-latte/40 px-4 py-2.5 text-sm">
+    </div>
+  </div>
+
+  <div class="grid grid-cols-3 gap-4">
+    <div>
+      <label class="text-xs font-bold text-espresso/60">Андоза</label>
+      <input type="text" name="size" value="{{ product.size if product else '' }}" class="w-full mt-1 rounded-xl border border-latte/40 px-4 py-2.5 text-sm">
+    </div>
+    <div>
+      <label class="text-xs font-bold text-espresso/60">SKU</label>
+      <input type="text" name="sku" value="{{ product.sku if product else '' }}" class="w-full mt-1 rounded-xl border border-latte/40 px-4 py-2.5 text-sm">
+    </div>
+    <div>
+      <label class="text-xs font-bold text-espresso/60">Миқдор дар анбор</label>
+      <input type="number" name="stock" value="{{ product.stock if product else 0 }}" class="w-full mt-1 rounded-xl border border-latte/40 px-4 py-2.5 text-sm">
+    </div>
+  </div>
+
+  <div>
+    <label class="text-xs font-bold text-espresso/60">Расмҳо (якчанд файл мумкин аст)</label>
+    <input type="file" name="images" multiple accept="image/*" class="w-full mt-1 text-sm">
+    {% if product and product.images %}
+    <div class="flex gap-2 mt-2">
+      {% for img in product.images %}
+      <img src="{{ url_for('static', filename='uploads/products/' + img.filename) }}" class="w-14 h-14 rounded-lg object-cover">
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="flex gap-6 items-center">
+    <label class="flex items-center gap-2 text-sm font-semibold">
+      <input type="checkbox" name="is_featured" {{ 'checked' if product and product.is_featured }}> Тавсияшуда
+    </label>
+    <label class="flex items-center gap-2 text-sm font-semibold">
+      <input type="checkbox" name="is_active" {{ 'checked' if not product or product.is_active }}> Фаъол (намоиш дар сайт)
+    </label>
+  </div>
+
+  <button type="submit" class="btn-primary rounded-full px-6 py-3 text-sm font-bold shadow-premium">Нигоҳ доштан</button>
+</form>
+{% endblock %}

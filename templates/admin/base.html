@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="tg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Admin — Kukucha.tjk{% endblock %}</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script>
+  tailwind.config = { theme: { extend: {
+    fontFamily: { sans: ['Nunito','sans-serif'] },
+    colors: { cream:'#FBF6EF', beige:'#F1E4D3', latte:'#D9BFA0', coffee:'#8A6B4F', espresso:'#5C4433' },
+    borderRadius: { '3xl':'1.75rem' }
+  }}}
+</script>
+</head>
+<body class="bg-cream text-espresso font-sans min-h-screen flex">
+
+<aside class="w-56 shrink-0 bg-white/70 border-r border-latte/30 min-h-screen p-4 hidden sm:block">
+  <a href="{{ url_for('main.index') }}" class="text-xl font-extrabold text-coffee block mb-6">KU-KU Admin</a>
+  <nav class="space-y-1 text-sm font-semibold">
+    <a href="{{ url_for('admin.dashboard') }}" class="block rounded-xl px-3 py-2 {{ 'bg-beige' if request.endpoint=='admin.dashboard' }}">📊 Dashboard</a>
+    <a href="{{ url_for('admin.products') }}" class="block rounded-xl px-3 py-2 {{ 'bg-beige' if request.endpoint and 'product' in request.endpoint }}">📦 Products</a>
+    <a href="{{ url_for('admin.categories') }}" class="block rounded-xl px-3 py-2 {{ 'bg-beige' if request.endpoint and 'categor' in request.endpoint }}">🗂 Categories</a>
+    <a href="{{ url_for('admin.orders') }}" class="block rounded-xl px-3 py-2 {{ 'bg-beige' if request.endpoint and 'order' in request.endpoint }}">🧾 Orders</a>
+    <a href="{{ url_for('admin.customers') }}" class="block rounded-xl px-3 py-2 {{ 'bg-beige' if request.endpoint=='admin.customers' }}">👥 Customers</a>
+    <a href="{{ url_for('main.index') }}" class="block rounded-xl px-3 py-2 mt-4 text-espresso/50">🏠 Ба сайт баргардед</a>
+    <a href="{{ url_for('auth.logout') }}" class="block rounded-xl px-3 py-2 text-red-500">🚪 Баромадан</a>
+  </nav>
+</aside>
+
+<main class="flex-1 p-5 sm:p-8 max-w-6xl">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="space-y-2 mb-4">
+      {% for category, message in messages %}
+        {% set colors = {'success':'bg-green-50 text-green-700 border-green-200','danger':'bg-red-50 text-red-700 border-red-200','warning':'bg-amber-50 text-amber-700 border-amber-200','info':'bg-blue-50 text-blue-700 border-blue-200'} %}
+        <div class="rounded-2xl border px-4 py-3 text-sm font-medium {{ colors.get(category,'bg-beige border-latte/40') }}">{{ message }}</div>
+      {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+  {% block admin_content %}{% endblock %}
+</main>
+
+</body>
+</html>

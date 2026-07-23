@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% from "_product_card.html" import product_card %}
+{% block title %}{{ product.name }} — {{ store_name }}{% endblock %}
+{% block content %}
+
+<div class="grid sm:grid-cols-2 gap-8">
+  <div>
+    <div class="aspect-square rounded-3xl overflow-hidden bg-beige card-premium mb-3">
+      {% if product.main_image %}
+        <img id="mainImage" src="{{ url_for('static', filename='uploads/products/' + product.main_image) }}" class="w-full h-full object-cover" alt="{{ product.name }}">
+      {% else %}
+        <div class="w-full h-full flex items-center justify-center text-8xl">🧸</div>
+      {% endif %}
+    </div>
+    {% if product.images|length > 1 %}
+    <div class="flex gap-2 overflow-x-auto">
+      {% for img in product.images %}
+      <img src="{{ url_for('static', filename='uploads/products/' + img.filename) }}"
+           onclick="document.getElementById('mainImage').src=this.src"
+           class="w-16 h-16 rounded-xl object-cover cursor-pointer border-2 border-transparent hover:border-coffee">
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+
+  <div>
+    {% if product.discount_percent %}
+      <span class="badge-discount text-white text-xs font-bold px-2 py-1 rounded-full">-{{ product.discount_percent }}%</span>
+    {% endif %}
+    <h1 class="text-2xl font-extrabold mt-2 mb-1">{{ product.name }}</h1>
+    {% if product.average_rating %}
+    <p class="text-sm text-amber-600 mb-3">⭐ {{ product.average_rating }} · {{ product.reviews|length }} шарҳ</p>
+    {% endif %}
+
+    <div class="flex items-baseline gap-3 mb-4">
+      <span class="text-3xl font-extrabold">{{ "%.0f"|format(product.price) }} с.</span>
+      {% if product.old_price and product.old_price > product.price %}
+        <span class="text-lg text-espresso/40 line-through">{{ "%.0f"|format(product.old_price) }} с.</span>
+      {% endif %}
+    </div>
+
+    <dl class="grid grid-cols-2 gap-y-2 text-sm mb-5 bg-white/60 rounded-2xl p-4 card-premium">
+      {% if product.brand %}<dt class="text-espresso/50">Бренд</dt><dd class="font-semibold">{{ product.brand }}</dd>{% endif %}
+      {% if product.country %}<dt class="text-espresso/50">Кишвари истеҳсол</dt><dd class="font-semibold">{{ product.country }}</dd>{% endif %}
+      {% if product.age_range %}<dt class="text-espresso/50">Синну сол</dt><dd class="font-semibold">{{ product.age_range }}</dd>{% endif %}
+      {% if product.color %}<dt class="text-espresso/50">Ранг</dt><dd class="font-semibold">{{ product.color }}</dd>{% endif %}
+      {% if product.size %}<dt class="text-espresso/50">Андоза</dt><dd class="font-semibold">{{ product.size }}</dd>{% endif %}
+      <dt class="text-espresso/50">Дар анбор</dt>
+      <dd class="font-semibold">{{ 'Мавҷуд аст (' + product.stock|string + ')' if product.stock > 0 else 'Тамом шуд' }}</dd>
+    </dl>
+
+    {% if product.description %}
+    <div class="mb-5">
+      <h3 class="font-bold mb-1 text-sm">Тавсиф</h3>
+      <p class="text-sm text-espresso/70 whitespace-pre-line">{{ product.description }}</p>
+    </div>
+    {% endif %}
+
+    <div class="flex gap-3">
+      <form action="{{ url_for('cart.add_to_cart', product_id=product.id) }}" method="post" class="flex-1">
+        <input type="hidden" name="quantity" value="1">
+        <button type="submit" {{ 'disabled' if product.stock <= 0 }}
+          class="btn-primary w-full rounded-full py-3.5 font-bold text-sm shadow-premium disabled:opacity-40">
+          {{ '🛒 Ба сабад' if product.stock > 0 else 'Тамом шуд' }}
+        </button>
+      </form>
+      {% if current_user.is_authenticated %}
+      <form action="{{ url_for('cart.toggle_favorite', product_id=product.id) }}" method="post">
+        <button class="w-14 h-14 rounded-full card-premium flex items-center justify-center text-xl">❤️</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% if reviews %}
+<section class="mt-10">
+  <h2 class="text-lg font-extrabold mb-3">Баррасиҳои муштариён</h2>
+  <div class="space-y-3">
+    {% for r in reviews %}
+    <div class="card-premium rounded-2xl p-4">
+      <p class="text-sm font-bold">{{ r.user.full_name }} <span class="text-amber-500 font-normal">{{ '⭐' * r.rating }}</span></p>
+      {% if r.comment %}<p class="text-sm text-espresso/70 mt-1">{{ r.comment }}</p>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if similar %}
+<section class="mt-10">
+  <h2 class="text-lg font-extrabold mb-3">Маҳсулоти монанд</h2>
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    {% for p in similar %}{{ product_card(p) }}{% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

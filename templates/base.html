@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="tg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}{{ store_name }} — либос ва бозичаи кӯдакона{% endblock %}</title>
+<meta name="description" content="Kukucha.tjk — интернет-магазини либос, пойафзол ва бозичаи кӯдакона.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Nunito', 'sans-serif'] },
+        colors: {
+          cream: '#FBF6EF',
+          beige: '#F1E4D3',
+          latte: '#D9BFA0',
+          coffee: '#8A6B4F',
+          espresso: '#5C4433',
+        },
+        boxShadow: {
+          premium: '0 10px 40px -12px rgba(90, 68, 51, 0.25)',
+        },
+        borderRadius: { '3xl': '1.75rem', '4xl': '2.25rem' },
+      }
+    }
+  }
+</script>
+</head>
+<body class="bg-cream text-espresso font-sans pb-24 min-h-screen">
+
+<header class="sticky top-0 z-40 bg-cream/90 backdrop-blur-md border-b border-latte/30">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center gap-3">
+    <a href="{{ url_for('main.index') }}" class="text-2xl font-extrabold tracking-tight text-coffee shrink-0">KU-KU</a>
+    <form action="{{ url_for('main.search') }}" method="get" class="flex-1 relative">
+      <input type="text" name="q" placeholder="Ҷустуҷӯи маҳсулот..."
+             value="{{ request.args.get('q','') }}"
+             class="w-full rounded-full bg-white/80 border border-latte/40 px-5 py-2.5 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-latte">
+      <button class="absolute right-1.5 top-1/2 -translate-y-1/2 bg-coffee text-white rounded-full w-8 h-8 flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      </button>
+    </form>
+    <a href="{{ url_for('cart.view_cart') if current_user.is_authenticated else url_for('auth.login') }}" class="hidden sm:flex items-center gap-1 text-sm font-semibold hover:text-coffee">
+      🛒 <span>{{ cart_count }}</span>
+    </a>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-4 py-5">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="space-y-2 mb-4">
+      {% for category, message in messages %}
+        {% set colors = {'success':'bg-green-50 text-green-700 border-green-200','danger':'bg-red-50 text-red-700 border-red-200','warning':'bg-amber-50 text-amber-700 border-amber-200','info':'bg-blue-50 text-blue-700 border-blue-200'} %}
+        <div class="rounded-2xl border px-4 py-3 text-sm font-medium {{ colors.get(category, 'bg-beige text-espresso border-latte/40') }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="max-w-6xl mx-auto px-4 py-10 mt-10 text-sm text-espresso/60 border-t border-latte/30 hidden sm:block">
+  <p>© {{ 2026 }} Kukucha.tjk — Одежда • Игрушки • Забота</p>
+</footer>
+
+<nav class="fixed bottom-0 inset-x-0 z-50 bg-white/90 backdrop-blur-md border-t border-latte/40 shadow-[0_-4px_20px_rgba(90,68,51,0.08)]">
+  <div class="max-w-6xl mx-auto grid grid-cols-5 text-center text-[11px] font-semibold">
+    <a href="{{ url_for('main.index') }}" class="nav-tab {{ 'nav-tab-active' if request.endpoint == 'main.index' }}">
+      <span class="text-xl block">🏠</span>Асосӣ
+    </a>
+    <a href="{{ url_for('main.categories') }}" class="nav-tab {{ 'nav-tab-active' if request.endpoint == 'main.categories' }}">
+      <span class="text-xl block">📂</span>Категорияҳо
+    </a>
+    <a href="{{ url_for('cart.view_cart') if current_user.is_authenticated else url_for('auth.login') }}" class="nav-tab relative {{ 'nav-tab-active' if request.endpoint == 'cart.view_cart' }}">
+      <span class="text-xl block">🛒</span>Сабад
+      {% if cart_count and cart_count > 0 %}
+        <span class="absolute top-0 right-1/2 translate-x-3 -translate-y-1 bg-coffee text-white text-[9px] rounded-full w-4 h-4 flex items-center justify-center">{{ cart_count }}</span>
+      {% endif %}
+    </a>
+    <a href="{{ url_for('cart.view_favorites') if current_user.is_authenticated else url_for('auth.login') }}" class="nav-tab {{ 'nav-tab-active' if request.endpoint == 'cart.view_favorites' }}">
+      <span class="text-xl block">❤️</span>Дӯстдоштаҳо
+    </a>
+    <a href="{{ url_for('orders.profile') if current_user.is_authenticated else url_for('auth.login') }}" class="nav-tab {{ 'nav-tab-active' if request.endpoint in ['orders.profile','auth.login','auth.register'] }}">
+      <span class="text-xl block">👤</span>Профил
+    </a>
+  </div>
+</nav>
+
+</body>
+</html>

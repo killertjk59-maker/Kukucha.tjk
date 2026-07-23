@@ -1,0 +1,23 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<h1 class="text-2xl font-extrabold mb-6">Категорияҳо</h1>
+
+<form method="post" class="card-premium rounded-2xl p-4 flex gap-3 mb-6 max-w-lg">
+  <input type="text" name="icon" placeholder="🧸" maxlength="4" class="w-16 rounded-xl border border-latte/40 px-3 py-2 text-sm text-center">
+  <input type="text" name="name" placeholder="Номи категория" required class="flex-1 rounded-xl border border-latte/40 px-4 py-2 text-sm">
+  <button type="submit" class="btn-primary rounded-xl px-5 py-2 text-sm font-bold">Илова</button>
+</form>
+
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+  {% for c in categories %}
+  <div class="card-premium rounded-2xl p-4 text-center relative">
+    <span class="text-3xl">{{ c.icon }}</span>
+    <p class="font-bold text-sm mt-1">{{ c.name }}</p>
+    <p class="text-xs text-espresso/50">{{ c.products|length }} маҳсулот</p>
+    <form action="{{ url_for('admin.category_delete', category_id=c.id) }}" method="post" onsubmit="return confirm('Нест кардан?');" class="mt-2">
+      <button class="text-red-500 text-xs font-semibold">Нест кардан</button>
+    </form>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "admin/base.html" %}
+{% block admin_content %}
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-extrabold">Маҳсулот</h1>
+  <a href="{{ url_for('admin.product_new') }}" class="btn-primary rounded-full px-5 py-2.5 text-sm font-bold">+ Маҳсулоти нав</a>
+</div>
+
+<div class="card-premium rounded-2xl overflow-hidden">
+  <table class="w-full text-sm">
+    <thead class="bg-beige/60 text-left"><tr>
+      <th class="p-3">Расм</th><th class="p-3">Ном</th><th class="p-3">Категория</th><th class="p-3">Нарх</th><th class="p-3">Анбор</th><th class="p-3">Статус</th><th class="p-3"></th>
+    </tr></thead>
+    <tbody>
+      {% for p in products %}
+      <tr class="border-t border-latte/20">
+        <td class="p-3">
+          <div class="w-10 h-10 rounded-lg bg-beige overflow-hidden">
+            {% if p.main_image %}<img src="{{ url_for('static', filename='uploads/products/' + p.main_image) }}" class="w-full h-full object-cover">{% endif %}
+          </div>
+        </td>
+        <td class="p-3 font-semibold">{{ p.name }}</td>
+        <td class="p-3">{{ p.category.name }}</td>
+        <td class="p-3 font-bold">{{ "%.0f"|format(p.price) }} с.</td>
+        <td class="p-3">{{ p.stock }}</td>
+        <td class="p-3">
+          {% if p.is_active %}<span class="text-green-600 font-semibold">Фаъол</span>{% else %}<span class="text-espresso/40">Ғайрифаъол</span>{% endif %}
+        </td>
+        <td class="p-3 flex gap-2">
+          <a href="{{ url_for('admin.product_edit', product_id=p.id) }}" class="text-coffee font-semibold">Таҳрир</a>
+          <form action="{{ url_for('admin.product_delete', product_id=p.id) }}" method="post" onsubmit="return confirm('Нест кардан?');">
+            <button class="text-red-500 font-semibold">Нест</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="p-6 text-center text-espresso/50">Маҳсулот нест.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
