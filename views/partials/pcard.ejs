@@ -1,0 +1,33 @@
+<div class="p-card reveal reveal-d<%= i % 4 %>">
+  <div class="img-wrap">
+    <a href="/product/<%= p.id %>">
+      <% if (p.discount > 0) { %><div class="p-badges"><span class="badge badge-discount">-%<%= p.discount %></span></div><% } %>
+      <% if (p.totalStock === 0) { %><div class="p-badges" style="left:auto;right:10px"><span class="badge badge-soft">Тамом</span></div><% } %>
+      <img src="<%= p.image %>" alt="<%= p.title %>" loading="lazy">
+    </a>
+    <% if (p.totalStock > 0) { %>
+      <button class="quick-add" data-add="<%= p.id %>" data-size="" title="Зуд илова кардан">🛒</button>
+    <% } %>
+  </div>
+  <div class="p-body">
+    <div class="p-rating">
+      <span class="stars"><% for (let s = 0; s < 5; s++) { %><%= s < Math.round(p.rating) ? '★' : '☆' %><% } %></span>
+      <span><%= p.rating.toFixed(1) %> (<%= p.rating_count %>)</span>
+    </div>
+    <a class="p-title" href="/product/<%= p.id %>"><%= p.title %></a>
+    <% if (p.sizes.length > 0) { %>
+      <div class="p-sizes"><% p.sizes.slice(0, 4).forEach(s => { %><span class="sz"><%= s.size %></span><% }) %><% if (p.sizes.length > 4) { %><span class="sz">+<%= p.sizes.length - 4 %></span><% } %></div>
+    <% } else if (p.totalStock === 0) { %>
+      <div class="p-stock-out">Барқароршавӣ дар назар аст</div>
+    <% } %>
+    <div class="p-price-row">
+      <span class="p-price"><%= fmt(p.price) %></span>
+      <% if (p.old_price) { %><span class="p-old"><%= fmt(p.old_price) %></span><% } %>
+    </div>
+    <% if (p.totalStock > 0) { %>
+      <button class="p-buy" data-add="<%= p.id %>" data-size="">🛒 Ба сабад</button>
+    <% } else { %>
+      <button class="p-buy" disabled>Тамом шуд</button>
+    <% } %>
+  </div>
+</div>

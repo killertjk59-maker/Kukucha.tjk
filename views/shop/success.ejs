@@ -1,0 +1,38 @@
+<%- include('../partials/head', {title}) %>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main class="container">
+  <div class="success-wrap reveal">
+    <div class="success-check">✓</div>
+    <h1>Фармоиш қабул шуд!</h1>
+    <p class="muted">Ташаккур, <b><%= order.customer_name %></b>! Мо ба зудӣ ба шумо занг зада, фармоишро тасдиқ мекунем.</p>
+    <div class="order-num">📄 Рақами фармоиш: №<%= order.id %></div>
+    <p class="small muted">Ҳолати фармоишро дар саҳифаи <a href="/orders" style="color:var(--brand-3);font-weight:700">«Фармоишҳои ман»</a> пайгирӣ карда метавонед.</p>
+    <div class="flex gap-12" style="justify-content:center;margin-top:22px;flex-wrap:wrap">
+      <a class="btn btn-primary" href="/orders">📦 Фармоишҳои ман</a>
+      <a class="btn btn-ghost" href="/catalog">Идомаи харид</a>
+    </div>
+
+    <div class="checkout-card" style="text-align:left;margin-top:34px">
+      <h3 style="margin-bottom:8px">🧾 Хулосаи фармоиш</h3>
+      <% items.forEach(it => { %>
+        <div class="flex gap-12" style="padding:8px 0;border-bottom:1px dashed var(--border);align-items:center">
+          <img src="<%= it.image %>" style="width:46px;height:46px;border-radius:9px;object-fit:cover" alt="">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13.5px;font-weight:700"><%= it.title %></div>
+            <div class="small muted"><%= it.size ? 'Андоза ' + it.size + ' · ' : '' %><%= it.qty %> × <%= fmt(it.price) %></div>
+          </div>
+          <b><%= fmt(it.price * it.qty) %></b>
+        </div>
+      <% }) %>
+      <div class="sum-row total" style="margin-top:10px">
+        <span>Ҳамагӣ (бо дастрасӣ)</span><b><%= fmt(order.total) %></b>
+      </div>
+      <div class="sum-row"><span>Усули пардохт</span><span><%= order.payment_method === 'cash' ? '💵 Нақдӣ' : order.payment_method === 'card' ? '💳 Корти банкӣ' : '📱 Терминал' %></span></div>
+      <div class="sum-row"><span>Дастрасӣ</span><span><%= order.delivery_method === 'courier' ? '🚚 Курьер' : '🏬 Аз магазин' %></span></div>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

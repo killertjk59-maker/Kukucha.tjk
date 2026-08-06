@@ -1,0 +1,45 @@
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-in">
+      <div>
+        <div class="footer-logo"><span class="logo-mark">🧸</span><span><b>Kukucha</b></span></div>
+        <p class="footer-desc">Бозичаҳо ва либосҳои кӯдакона бо сифати баланд ва нархи одилона. Мо барои табассуми кӯдакони шумо кор мекунем!</p>
+        <div class="footer-pay">
+          <span>💵 Нақд</span><span>💳 Корти банкӣ</span><span>📱 Терминал</span>
+        </div>
+      </div>
+      <div>
+        <h4>Магазин</h4>
+        <ul>
+          <li><a href="/catalog">Каталоги пурра</a></li>
+          <li><a href="/catalog?sort=new">Навомадҳо</a></li>
+          <li><a href="/catalog?sort=rating">Беҳтаринҳо</a></li>
+          <li><a href="/cart">Сабади харид</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Категорияҳо</h4>
+        <ul>
+          <% categories.slice(0, 6).forEach(c => { %>
+            <li><a href="/catalog?category=<%= c.id %>"><%= c.icon %> <%= c.name %></a></li>
+          <% }) %>
+        </ul>
+      </div>
+      <div>
+        <h4>Тамос</h4>
+        <ul>
+          <li><a href="tel:+992900000000">📞 +992 900 000 000</a></li>
+          <li><a href="mailto:info@kukucha.tj">✉️ info@kukucha.tj</a></li>
+          <li><a href="#">📍 Хуҷанд, ш. Истиқлол</a></li>
+          <li><a href="#">🕘 Ҳар рӯз 9:00 — 20:00</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container" style="padding:0">
+        <span>© <%= new Date().getFullYear() %> Kukucha.tj — Ҳамаи ҳуқуқҳо ҳифз шудаанд.</span>
+        <span>Сайти расмии интернет-магазини бозичаҳо ва либоси кӯдакона</span>
+      </div>
+    </div>
+  </div>
+</footer>

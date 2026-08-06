@@ -1,0 +1,104 @@
+<%- include('../partials/head', {title}) %>
+<%- include('partial') %>
+<%- include('../partials/flash') %>
+
+<div class="admin-head">
+  <h1><%= product ? '✏️ Таҳрири маҳсулот' : '➕ Маҳсулоти нав' %></h1>
+  <a class="btn btn-ghost" href="/admin/products">← Бозгашт</a>
+</div>
+
+<div class="admin-card" style="max-width:860px">
+  <form method="post" action="/admin/products">
+    <% if (product) { %><input type="hidden" name="product_id" value="<%= product.id %>"><% } %>
+
+    <div class="form-row">
+      <div class="form-group" style="grid-column:1/-1">
+        <label>Номи маҳсулот *</label>
+        <input class="form-control" name="title" value="<%= product ? product.title : '' %>" placeholder="Масалан: Хирсаки мулоим 40 см" required>
+      </div>
+      <div class="form-group">
+        <label>Категория *</label>
+        <select class="form-control" name="category_id" required>
+          <% cats.forEach(c => { %>
+            <option value="<%= c.id %>" <%= product && product.category_id === c.id ? 'selected' : '' %>><%= c.icon %> <%= c.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Суроғаи расм (URL)</label>
+        <input class="form-control" name="image" value="<%= product ? product.image : '' %>" placeholder="/img/example.jpg ё https://...">
+        <div class="form-hint">Агар холӣ монад, SVG-и брендӣ истифода мешавад</div>
+      </div>
+      <div class="form-group">
+        <label>Нарх (сом) *</label>
+        <input class="form-control" type="number" name="price" value="<%= product ? product.price : '' %>" min="0" step="0.01" required>
+      </div>
+      <div class="form-group">
+        <label>Нархи пешина (барои тахфиф)</label>
+        <input class="form-control" type="number" name="old_price" value="<%= product && product.old_price ? product.old_price : '' %>" min="0" step="0.01">
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label>Тавсиф</label>
+        <textarea class="form-control" name="description" rows="4" placeholder="Мавод, андоза, нигоҳубин, барои чандсола..."><%= product ? product.description : '' %></textarea>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-check">
+          <input type="checkbox" name="has_sizes" id="hasSizes" <%= product && product.has_sizes ? 'checked' : '' %> onchange="document.getElementById('sizeBlock').style.display=this.checked?'block':'none';document.getElementById('stockBlock').style.display=this.checked?'none':'block'">
+          Ин мол андоза дорад (либос/пойафзол)
+        </label>
+        <div class="form-hint">Барои бозичаҳо ва дигар молҳо бе андоза — танҳо миқдор</div>
+      </div>
+      <div class="form-group">
+        <label class="form-check"><input type="checkbox" name="is_featured" <%= product && product.is_featured ? 'checked' : '' %>> 🔥 Маъмул (дар саҳифаи асосӣ)</label>
+        <label class="form-check" style="margin-top:8px"><input type="checkbox" name="is_published" <%= !product || product.is_published ? 'checked' : '' %>> 👁 Нашршуда</label>
+      </div>
+    </div>
+
+    <div id="stockBlock" style="<%= product && product.has_sizes ? 'display:none' : '' %>">
+      <div class="form-group">
+        <label>Миқдор дар анбор</label>
+        <input class="form-control" type="number" name="stock" value="<%= product && !product.has_sizes ? product.stock : 0 %>" min="0">
+      </div>
+    </div>
+
+    <div id="sizeBlock" style="<%= product && product.has_sizes ? 'display:block' : 'display:none' %>">
+      <label style="display:block;font-weight:600;font-size:13.5px;margin-bottom:8px">Андозаҳо ва миқдор дар анбор:</label>
+      <div id="sizesWrap">
+        <% if (typeof sizes !== 'undefined' && sizes.length) { %>
+          <% sizes.forEach(s => { %>
+            <div class="size-row">
+              <input class="form-control" name="size[]" value="<%= s.size %>" placeholder="Андоза (мас. 110, S)">
+              <input class="form-control" type="number" name="size_stock[]" value="<%= s.stock %>" min="0" placeholder="Анбор">
+              <button class="rm-size" type="button" onclick="this.closest('.size-row').remove()">✕</button>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <div class="size-row">
+            <input class="form-control" name="size[]" placeholder="Андоза (мас. 110, S)">
+            <input class="form-control" type="number" name="size_stock[]" min="0" placeholder="Анбор">
+            <button class="rm-size" type="button" onclick="this.closest('.size-row').remove()">✕</button>
+          </div>
+        <% } %>
+      </div>
+      <button class="btn btn-ghost btn-sm" type="button" onclick="addSizeRow()">+ Андозаи дигар</button>
+    </div>
+
+    <% if (product && product.image) { %>
+      <div class="mt-16" style="display:flex;gap:14px;align-items:center">
+        <img src="<%= product.image %>" style="width:70px;height:70px;border-radius:13px;object-fit:cover" alt="">
+        <span class="small muted">Расми ҷорӣ</span>
+      </div>
+    <% } %>
+
+    <div class="mt-24 flex gap-12">
+      <button class="btn btn-primary btn-lg" type="submit">💾 Нигоҳ доштан</button>
+      <a class="btn btn-ghost" href="/admin/products">Бекор</a>
+    </div>
+  </form>
+</div>
+
+</main></div>
+<%- include('../partials/footer') %>

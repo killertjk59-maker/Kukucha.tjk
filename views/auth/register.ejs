@@ -1,0 +1,38 @@
+<%- include('../partials/head', {title}) %>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<div class="auth-wrap">
+  <div class="auth-card">
+    <h1>Бақайдгирӣ ✨</h1>
+    <p class="sub">Ҳисоби нав созед — харидро осонтар идора кунед</p>
+    <form method="post" action="/register">
+      <div class="form-group">
+        <label>Номи пурра *</label>
+        <input class="form-control" name="full_name" placeholder="Масалан: Малика Қодирова" required>
+      </div>
+      <div class="form-group">
+        <label>Телефон</label>
+        <input class="form-control" name="phone" placeholder="+992 9X XXX XX XX">
+      </div>
+      <div class="form-group">
+        <label>Логин *</label>
+        <input class="form-control" name="username" placeholder="3-20 аломат: a-z, 0-9, _" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Парол *</label>
+          <input class="form-control" type="password" name="password" placeholder="На кам аз 6 аломат" required>
+        </div>
+        <div class="form-group">
+          <label>Такрори парол</label>
+          <input class="form-control" type="password" name="password2" placeholder="Боз нависед" required>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block btn-lg" type="submit">Бақайдгирӣ →</button>
+    </form>
+    <p class="auth-alt">Аллакай ҳисоб доред? <a href="/login">Ворид шавед</a></p>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

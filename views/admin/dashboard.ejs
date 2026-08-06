@@ -1,0 +1,97 @@
+<%- include('../partials/head', {title}) %>
+<%- include('partial', {stats}) %>
+<%- include('../partials/flash') %>
+
+<div class="admin-head">
+  <h1>📊 Дашборд</h1>
+  <a class="btn btn-primary" href="/admin/products/new">+ Маҳсулоти нав</a>
+</div>
+
+<div class="stat-cards">
+  <div class="stat-card"><div class="s-ic green">💰</div><div><b><%= fmt(stats.revenue) %></b><span>Фурӯши умумӣ</span></div></div>
+  <div class="stat-card"><div class="s-ic brand">📋</div><div><b><%= stats.orders %></b><span>Фармоишҳо</span></div></div>
+  <div class="stat-card"><div class="s-ic red">🆕</div><div><b><%= stats.newOrders %></b><span>Фармоишҳои нав</span></div></div>
+  <div class="stat-card"><div class="s-ic blue">📦</div><div><b><%= stats.products %></b><span>Маҳсулотҳо</span></div></div>
+  <div class="stat-card"><div class="s-ic green">👥</div><div><b><%= stats.customers %></b><span>Харидорон</span></div></div>
+</div>
+
+<div class="admin-grid-2">
+  <div class="admin-card">
+    <h3>📈 Фурӯш аз рӯи рӯзҳо</h3>
+    <% if (revenueByDay.length === 0) { %>
+      <div class="empty" style="padding:30px"><span class="e-ic">📈</span>Ҳанӯз фурӯш нест</div>
+    <% } else { %>
+      <div class="bar-chart">
+        <% const maxR = Math.max(...revenueByDay.map(r => r.s), 1); %>
+        <% revenueByDay.forEach(r => { %>
+          <div class="bar" title="<%= r.d %>: <%= fmt(r.s) %> (<%= r.c %> фармоиш)" style="height:<%= Math.max(4, r.s / maxR * 100) %>%">
+            <span><%= r.d.slice(8) %></span>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="admin-card">
+    <h3>📋 Ҳолатҳои фармоиш</h3>
+    <% const stMap = {new:'⏳ Нав', confirmed:'✅ Тасдиқшуда', shipped:'🚚 Дар роҳ', delivered:'🎉 Расонида', cancelled:'❌ Бекор'}; %>
+    <% ['new','confirmed','shipped','delivered','cancelled'].forEach(st => { %>
+      <% const c = (statusCounts.find(x => x.status === st) || {}).c || 0; %>
+      <div class="flex items-center justify-between" style="padding:9px 0;border-bottom:1px dashed var(--border)">
+        <span class="status status-<%= st %>"><%= stMap[st] %></span>
+        <b style="font-size:17px"><%= c %></b>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+<div class="admin-grid-2r">
+  <div class="admin-card">
+    <h3>🕐 Фармоишҳои охирин</h3>
+    <% if (recentOrders.length === 0) { %>
+      <div class="empty" style="padding:30px"><span class="e-ic">📦</span>Фармоишҳо нестанд</div>
+    <% } else { %>
+      <% recentOrders.forEach(o => { %>
+        <a class="order-row" href="/admin/orders/<%= o.id %>">
+          <div class="o-ic">📦</div>
+          <div class="o-info">
+            <b>№<%= o.id %> · <%= o.customer_name %></b>
+            <span><%= fmt(o.total) %> · <%= new Date(o.created_at + 'Z').toLocaleString('ru-RU', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) %></span>
+          </div>
+          <span class="status status-<%= o.status %>"><%= stMap[o.status] %></span>
+        </a>
+      <% }) %>
+    <% } %>
+  </div>
+
+  <div class="admin-card">
+    <h3>⚠️ Молҳои ками анбор</h3>
+    <% if (lowStock.length === 0) { %>
+      <div class="empty" style="padding:30px"><span class="e-ic">✅</span>Ҳама молҳо дар анбор ҳастанд</div>
+    <% } else { %>
+      <% lowStock.filter(p => p.totalStock <= 5).forEach(p => { %>
+        <div class="flex items-center gap-12" style="padding:9px 0;border-bottom:1px dashed var(--border)">
+          <img class="thumb" src="<%= p.image %>" alt="">
+          <div style="flex:1;min-width:0"><b style="font-size:13px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><%= p.title %></b>
+          <span class="small <%= p.totalStock === 0 ? 'status-cancelled' : 'status-new' %>" style="display:inline-block;margin-top:3px"><%= p.totalStock === 0 ? 'Тамом шуд!' : 'Монда: ' + p.totalStock %></span></div>
+          <a class="btn btn-ghost btn-sm" href="/admin/products/<%= p.id %>/edit">Таҳрир</a>
+        </div>
+      <% }) %>
+    <% } %>
+  </div>
+</div>
+
+<div class="admin-card">
+  <h3>👥 Харидорони нав</h3>
+  <div style="display:flex;gap:12px;flex-wrap:wrap">
+    <% recentCustomers.forEach(u => { %>
+      <div class="flex items-center gap-8" style="background:var(--bg-2);border-radius:12px;padding:9px 14px">
+        <span class="avatar" style="width:30px;height:30px;border-radius:50%;background:var(--brand-gradient);color:var(--on-brand);display:grid;place-items:center;font-weight:800;font-size:12px"><%= (u.full_name || 'U').charAt(0).toUpperCase() %></span>
+        <div><b style="font-size:13px"><%= u.full_name %></b><div class="small muted">@<%= u.username %></div></div>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+</main></div>
+<%- include('../partials/footer') %>

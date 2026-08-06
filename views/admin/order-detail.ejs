@@ -1,0 +1,74 @@
+<%- include('../partials/head', {title}) %>
+<%- include('partial') %>
+<%- include('../partials/flash') %>
+
+<div class="admin-head">
+  <h1>📋 Фармоиш №<%= order.id %></h1>
+  <div class="flex gap-8">
+    <a class="btn btn-ghost" href="/admin/orders">← Ҳамаи фармоишҳо</a>
+  </div>
+</div>
+
+<div class="order-detail-grid">
+  <div>
+    <div class="admin-card" style="margin-bottom:18px">
+      <h3>🧾 Молҳои фармоиш</h3>
+      <% items.forEach(it => { %>
+        <div class="flex gap-12" style="padding:10px 0;border-bottom:1px dashed var(--border);align-items:center">
+          <img src="<%= it.image %>" style="width:52px;height:52px;border-radius:10px;object-fit:cover" alt="">
+          <div style="flex:1;min-width:0">
+            <b style="font-size:14px"><%= it.title %></b>
+            <div class="small muted"><%= it.size ? 'Андоза ' + it.size + ' · ' : '' %><%= it.qty %> × <%= fmt(it.price) %></div>
+          </div>
+          <b><%= fmt(it.price * it.qty) %></b>
+        </div>
+      <% }) %>
+      <div class="sum-row" style="margin-top:12px"><span>Маҳсулот</span><span><%= fmt(order.subtotal) %></span></div>
+      <div class="sum-row"><span>Дастрасӣ</span><span><%= order.delivery_fee === 0 ? 'Ройгон' : fmt(order.delivery_fee) %></span></div>
+      <div class="sum-row total"><span>Ҳамагӣ</span><b><%= fmt(order.total) %></b></div>
+    </div>
+
+    <div class="admin-card">
+      <h3>🔄 Иваз кардани ҳолат</h3>
+      <form method="post" action="/admin/orders/<%= order.id %>/status" class="flex gap-8" style="flex-wrap:wrap;align-items:center">
+        <select class="form-control" name="status" style="flex:1;min-width:200px">
+          <% const stMap = {new:'⏳ Нав', confirmed:'✅ Тасдиқшуда', shipped:'🚚 Дар роҳ', delivered:'🎉 Расонида шуд', cancelled:'❌ Бекор'}; %>
+          <% Object.entries(stMap).forEach(([k, v]) => { %>
+            <option value="<%= k %>" <%= order.status === k ? 'selected' : '' %>><%= v %></option>
+          <% }) %>
+        </select>
+        <button class="btn btn-primary" type="submit">💾 Нигоҳ доштан</button>
+      </form>
+    </div>
+  </div>
+
+  <div>
+    <div class="admin-card" style="margin-bottom:18px">
+      <h3>📍 Маълумот оид ба харидор</h3>
+      <p style="font-size:14px">
+        <b><%= order.customer_name %></b><br>
+        📞 <%= order.phone %><br>
+        🏙 <%= order.city %>, <%= order.address %>
+      </p>
+      <% if (order.comment) { %><p class="small muted">💬 <%= order.comment %></p><% } %>
+      <hr style="border:none;border-top:1px dashed var(--border);margin:12px 0">
+      <p class="small">
+        <b>Пардохт:</b> <%= order.payment_method === 'cash' ? '💵 Нақдӣ' : order.payment_method === 'card' ? '💳 Корти банкӣ' : '📱 Терминал' %><br>
+        <b>Дастрасӣ:</b> <%= order.delivery_method === 'courier' ? '🚚 Курьер' : '🏬 Гирифтан аз магазин' %><br>
+        <b>Сана:</b> <%= new Date(order.created_at + 'Z').toLocaleString('ru-RU') %>
+      </p>
+    </div>
+    <% if (customer) { %>
+      <div class="admin-card">
+        <h3>👤 Ҳисоби харидор</h3>
+        <div class="flex items-center gap-12">
+          <span class="avatar" style="width:42px;height:42px;border-radius:50%;background:var(--brand-gradient);color:var(--on-brand);display:grid;place-items:center;font-weight:800"><%= customer.full_name.charAt(0).toUpperCase() %></span>
+          <div><b><%= customer.full_name %></b><div class="small muted">@<%= customer.username %> · <%= customer.phone %></div></div>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+</main></div>
+<%- include('../partials/footer') %>

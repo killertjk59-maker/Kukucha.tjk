@@ -1,0 +1,48 @@
+<%- include('../partials/head', {title}) %>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main class="container">
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(340px,1fr));padding:30px 0;gap:20px">
+    <div class="checkout-card reveal">
+      <h3>👤 Маълумоти ман</h3>
+      <form method="post" action="/profile">
+        <div class="form-group">
+          <label>Номи пурра</label>
+          <input class="form-control" name="full_name" value="<%= user.full_name %>" required>
+        </div>
+        <div class="form-group">
+          <label>Телефон</label>
+          <input class="form-control" name="phone" value="<%= user.phone %>" placeholder="+992 9X XXX XX XX">
+        </div>
+        <div class="form-group">
+          <label>Логин</label>
+          <input class="form-control" value="<%= user.username %>" disabled>
+          <div class="form-hint">Логинро иваз кардан мумкин нест</div>
+        </div>
+        <button class="btn btn-primary" type="submit">💾 Нав кардан</button>
+      </form>
+    </div>
+
+    <div class="checkout-card reveal reveal-d1">
+      <h3>🔒 Иваз кардани парол</h3>
+      <form method="post" action="/profile/password">
+        <div class="form-group">
+          <label>Пароли куҳна</label>
+          <input class="form-control" type="password" name="old_password" required>
+        </div>
+        <div class="form-group">
+          <label>Пароли нав</label>
+          <input class="form-control" type="password" name="new_password" placeholder="На кам аз 6 аломат" required>
+        </div>
+        <div class="form-group">
+          <label>Такрори пароли нав</label>
+          <input class="form-control" type="password" name="new_password2" required>
+        </div>
+        <button class="btn btn-dark" type="submit">Иваз кардан</button>
+      </form>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,31 @@
+<%- include('../partials/head', {title}) %>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main class="container">
+  <h1 style="font-size:26px;margin:26px 0 18px">📦 Фармоишҳои ман</h1>
+
+  <% if (orders.length === 0) { %>
+    <div class="empty" style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg)">
+      <span class="e-ic">📦</span>
+      <h3>Фармоишҳо ҳанӯз нестанд</h3>
+      <p>Аввалин фармоиши худро дар Kukucha гузоред!</p>
+      <a class="btn btn-primary btn-lg" href="/catalog">🧸 Ба каталог</a>
+    </div>
+  <% } else { %>
+    <% orders.forEach(o => { %>
+      <div class="order-row reveal">
+        <div class="o-ic">📦</div>
+        <div class="o-info">
+          <b>Фармоиш №<%= o.id %></b>
+          <span><%= new Date(o.created_at + 'Z').toLocaleString('ru-RU', {day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}) %> · <%= o.items.length %> мол · <b><%= fmt(o.total) %></b></span>
+        </div>
+        <% const st = o.status; %>
+        <span class="status status-<%= st %>"><%= {new:'⏳ Нав',confirmed:'✅ Тасдиқшуда',shipped:'🚚 Дар роҳ',delivered:'🎉 Расонида шуд',cancelled:'❌ Бекоршуда'}[st] || st %></span>
+        <a class="btn btn-ghost btn-sm" href="/order/<%= o.id %>">Муфассал →</a>
+      </div>
+    <% }) %>
+  <% } %>
+</main>
+
+<%- include('../partials/footer') %>

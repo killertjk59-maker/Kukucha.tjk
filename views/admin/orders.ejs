@@ -1,0 +1,34 @@
+<%- include('../partials/head', {title}) %>
+<%- include('partial') %>
+<%- include('../partials/flash') %>
+
+<div class="admin-head">
+  <h1>📋 Фармоишҳо</h1>
+  <div class="flex gap-8">
+    <a class="btn <%= !status ? 'btn-primary' : 'btn-ghost' %> btn-sm" href="/admin/orders">Ҳама</a>
+    <a class="btn <%= status === 'new' ? 'btn-primary' : 'btn-ghost' %> btn-sm" href="/admin/orders?status=new">⏳ Нав</a>
+    <a class="btn <%= status === 'confirmed' ? 'btn-primary' : 'btn-ghost' %> btn-sm" href="/admin/orders?status=confirmed">✅ Тасдиқ</a>
+    <a class="btn <%= status === 'shipped' ? 'btn-primary' : 'btn-ghost' %> btn-sm" href="/admin/orders?status=shipped">🚚 Дар роҳ</a>
+    <a class="btn <%= status === 'delivered' ? 'btn-primary' : 'btn-ghost' %> btn-sm" href="/admin/orders?status=delivered">🎉 Расонида</a>
+  </div>
+</div>
+
+<% if (orders.length === 0) { %>
+  <div class="admin-card empty"><span class="e-ic">📦</span>Фармоишҳо нестанд</div>
+<% } else { %>
+  <% orders.forEach(o => { %>
+    <a class="order-row" href="/admin/orders/<%= o.id %>">
+      <div class="o-ic">📦</div>
+      <div class="o-info">
+        <b>№<%= o.id %> · <%= o.customer_name %></b>
+        <span>📞 <%= o.phone %> · <%= o.city %> · <%= o.items.length %> мол · <b><%= fmt(o.total) %></b></span>
+      </div>
+      <% const stMap = {new:'⏳ Нав', confirmed:'✅ Тасдиқшуда', shipped:'🚚 Дар роҳ', delivered:'🎉 Расонида шуд', cancelled:'❌ Бекор'}; %>
+      <span class="status status-<%= o.status %>"><%= stMap[o.status] || o.status %></span>
+      <span class="small muted"><%= new Date(o.created_at + 'Z').toLocaleString('ru-RU', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) %></span>
+    </a>
+  <% }) %>
+<% } %>
+
+</main></div>
+<%- include('../partials/footer') %>

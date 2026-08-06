@@ -1,0 +1,8 @@
+<% if (flash && flash.length) { %>
+  <% flash.forEach(f => { %>
+    <div class="alert alert-<%= f.type === 'success' ? 'success' : 'error' %>">
+      <span><%= f.type === 'success' ? '✅' : '⚠️' %></span>
+      <div><%= f.text %></div>
+    </div>
+  <% }) %>
+<% } %>

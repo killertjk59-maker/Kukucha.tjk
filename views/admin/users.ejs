@@ -1,0 +1,53 @@
+<%- include('../partials/head', {title}) %>
+<%- include('partial') %>
+<%- include('../partials/flash') %>
+
+<div class="admin-head">
+  <h1>👥 Истифодабарандагон</h1>
+</div>
+
+<div class="admin-card">
+  <div style="overflow-x:auto">
+  <table class="admin-table">
+    <thead>
+      <tr><th>Истифодабаранда</th><th>Тамос</th><th>Фармоишҳо</th><th>Нақш</th><th>Сана</th><th style="text-align:right">Амалҳо</th></tr>
+    </thead>
+    <tbody>
+      <% users.forEach(u => { %>
+        <tr>
+          <td>
+            <div class="flex items-center gap-12">
+              <span class="avatar" style="width:36px;height:36px;border-radius:50%;background:var(--brand-gradient);color:var(--on-brand);display:grid;place-items:center;font-weight:800;flex-shrink:0"><%= (u.full_name || 'U').charAt(0).toUpperCase() %></span>
+              <div><b><%= u.full_name %></b><div class="small muted">@<%= u.username %><% if (u.id === user.id) { %> · шумо<% } %></div></div>
+            </div>
+          </td>
+          <td class="small"><%= u.phone || '—' %></td>
+          <td><b><%= u.orders %></b></td>
+          <td>
+            <form method="post" action="/admin/users/<%= u.id %>/role" class="flex gap-8">
+              <select class="form-control" name="role" style="width:auto;padding:6px 10px;font-size:13px" <%= u.id === user.id ? 'disabled' : '' %>>
+                <option value="customer" <%= u.role === 'customer' ? 'selected' : '' %>>Харидор</option>
+                <option value="admin" <%= u.role === 'admin' ? 'selected' : '' %>>Админ</option>
+              </select>
+              <% if (u.id !== user.id) { %><button class="btn btn-ghost btn-sm" type="submit">OK</button><% } %>
+            </form>
+          </td>
+          <td class="small muted"><%= new Date(u.created_at + 'Z').toLocaleDateString('ru-RU') %></td>
+          <td>
+            <div class="actions">
+              <% if (u.id !== user.id) { %>
+                <form method="post" action="/admin/users/<%= u.id %>/delete" onsubmit="return confirm('Истифодабаранда нест карда шавад?')">
+                  <button class="btn btn-danger btn-sm" type="submit">Нест</button>
+                </form>
+              <% } %>
+            </div>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+</main></div>
+<%- include('../partials/footer') %>

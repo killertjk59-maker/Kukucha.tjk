@@ -1,0 +1,24 @@
+<%- include('../partials/head', {title}) %>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<div class="auth-wrap">
+  <div class="auth-card">
+    <h1>Хуш омадед! 👋</h1>
+    <p class="sub">Ба ҳисоби худ ворид шавед, то харидро идома диҳед</p>
+    <form method="post" action="/login">
+      <div class="form-group">
+        <label>Логин</label>
+        <input class="form-control" name="username" placeholder="логини шумо" required autofocus>
+      </div>
+      <div class="form-group">
+        <label>Парол</label>
+        <input class="form-control" type="password" name="password" placeholder="••••••••" required>
+      </div>
+      <button class="btn btn-primary btn-block btn-lg" type="submit">Ворид шудан →</button>
+    </form>
+    <p class="auth-alt">Ҳисоб надоред? <a href="/register">Бақайдгирӣ</a></p>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

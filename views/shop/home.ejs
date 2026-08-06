@@ -1,0 +1,83 @@
+<%- include('../partials/head', {title}) %>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-in">
+      <div>
+        <span class="hero-badge">⭐ Магазини №1 барои кӯдакон дар Тоҷикистон</span>
+        <h1>Бозичаҳо ва либосҳо барои <span class="accent">кӯдакони хушбахт</span></h1>
+        <p>Дар Kukucha.tj ҳама чиз барои кӯдаки шумо: аз хирсакҳои мулоим то либосҳои тобистона. Сифати беҳтарин, нархҳои одилона ва дастрасии зуд.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary btn-lg" href="/catalog">🧸 Харид кардан</a>
+          <a class="btn btn-ghost btn-lg" href="/catalog?category=<%= cats[0] ? cats[0].id : '' %>">Навомадҳо</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><b>10 000+</b><span>Харидорони хушнуд</span></div>
+          <div class="hero-stat"><b>500+</b><span>Намуди маҳсулот</span></div>
+          <div class="hero-stat"><b>4.9★</b><span>Баҳои харидорон</span></div>
+        </div>
+      </div>
+      <div class="hero-media">
+        <img src="/img/hero.jpg" alt="Бозичаҳои Kukucha">
+        <div class="float-card fc-1">🧸 Хирсаки Kuku<br><b style="color:var(--brand-3)">189 сом</b></div>
+        <div class="float-card fc-2">🚚 Дастрасии ройгон<br><b style="color:var(--brand-3)">аз 500 сом</b></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <div class="container">
+    <div class="sec-head reveal">
+      <div><h2>Категорияҳо</h2><div class="sub">Чизе, ки ба кӯдаки шумо лозим аст</div></div>
+    </div>
+    <div class="cats-grid">
+      <% cats.forEach((c, i) => { %>
+        <a class="cat-tile reveal reveal-d<%= i % 4 %>" href="/catalog?category=<%= c.id %>">
+          <span class="c-ic"><%= c.icon %></span>
+          <b><%= c.name %></b>
+          <span><%= c.count %> маҳсулот</span>
+        </a>
+      <% }) %>
+    </div>
+
+    <!-- FEATURED -->
+    <div class="sec-head reveal">
+      <div><h2>🔥 Маҳсулоти маъмул</h2><div class="sub">Он чизеро, ки харидорон бештар мехаранд</div></div>
+      <a class="sec-link" href="/catalog">Ҳамаро бинед →</a>
+    </div>
+    <div class="products-grid">
+      <% featured.forEach((p, i) => { %><%- include('../partials/pcard', {p, i}) %><% }) %>
+    </div>
+
+    <!-- BANNER -->
+    <div class="promo reveal" style="margin-top:52px;background:var(--brand-gradient);border-radius:var(--radius-lg);padding:38px 40px;color:var(--on-brand);display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;position:relative;overflow:hidden">
+      <div style="position:relative;z-index:1">
+        <h2 style="font-size:26px;margin-bottom:6px">🚚 Дастрасии ройгон!</h2>
+        <p style="opacity:.92;font-size:14.5px">Барои ҳамаи фармоишҳо аз 500 сом — расондани ройгон дар тамоми шаҳр.</p>
+      </div>
+      <a class="btn" href="/catalog" style="background:#fff;color:var(--brand-3);position:relative;z-index:1">Харид кардан →</a>
+    </div>
+
+    <!-- NEW ARRIVALS -->
+    <div class="sec-head reveal">
+      <div><h2>✨ Навомадҳо</h2><div class="sub">Маҳсулоти охирин дар магазин</div></div>
+      <a class="sec-link" href="/catalog?sort=new">Ҳама →</a>
+    </div>
+    <div class="products-grid">
+      <% newArrivals.forEach((p, i) => { %><%- include('../partials/pcard', {p, i}) %><% }) %>
+    </div>
+
+    <!-- BENEFITS -->
+    <div class="benefits">
+      <div class="benefit reveal"><span class="b-ic">🚚</span><div><b>Дастрасии зуд</b><span>Дар худи ҳамон рӯз — дар дохили шаҳр</span></div></div>
+      <div class="benefit reveal reveal-d1"><span class="b-ic">🛡</span><div><b>Кафолати сифат</b><span>Маҳсулоти сертификатшуда, безарар барои кӯдак</span></div></div>
+      <div class="benefit reveal reveal-d2"><span class="b-ic">🔄</span><div><b>Бозгардонии осон</b><span>14 рӯз барои баргардонии мол</span></div></div>
+      <div class="benefit reveal reveal-d3"><span class="b-ic">🎁</span><div><b>Тӯҳфа ба ҳар фармоиш</b><span>Сюрпризи хурд барои кӯдаки шумо</span></div></div>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

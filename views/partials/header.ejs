@@ -1,0 +1,59 @@
+<div class="announce">
+  <div class="announce-track">
+    <span>🧸 Бозичаҳо ва либоси кӯдакона</span><span>🚚 Дастрасии ройгон аз 500 сом</span><span>🎁 Барои фармоишҳои нав — тӯҳфа!</span><span>⭐ Беш аз 10 000 харидори хушнуд</span><span>🛡 Кафолати сифат 100%</span>
+    <span>🧸 Бозичаҳо ва либоси кӯдакона</span><span>🚚 Дастрасии ройгон аз 500 сом</span><span>🎁 Барои фармоишҳои нав — тӯҳфа!</span><span>⭐ Беш аз 10 000 харидори хушнуд</span><span>🛡 Кафолати сифат 100%</span>
+  </div>
+</div>
+<header class="site-header">
+  <div class="container header-in">
+    <a href="/" class="logo">
+      <span class="logo-mark">🧸</span>
+      <span><b>Kukucha</b>кукча.тҷ</span>
+    </a>
+
+    <form class="header-search" action="/catalog" method="get">
+      <input type="text" name="q" placeholder="Ҷустуҷӯи бозичаҳо, либосҳо..." value="<%= typeof qs !== 'undefined' ? qs : '' %>">
+      <span class="s-ic">🔍</span>
+    </form>
+
+    <div class="header-actions">
+      <button class="theme-toggle" id="themeToggle" title="Режими торик/равшан">🌙</button>
+      <% if (user) { %>
+        <a class="icon-btn" href="/orders" title="Фармоишҳо">📦</a>
+        <a class="icon-btn" href="/cart" title="Сабад">
+          🛒<span class="count" id="cartCount" style="<%= cartCount > 0 ? '' : 'display:none' %>"><%= cartCount %></span>
+        </a>
+        <a class="user-chip" href="/profile">
+          <span class="avatar"><%= (user.full_name || 'U').charAt(0).toUpperCase() %></span>
+          <b><%= user.full_name.split(' ')[0] %></b>
+        </a>
+        <% if (user.role === 'admin') { %><a class="icon-btn" href="/admin" title="Админ-панел">⚙️</a><% } %>
+        <form method="post" action="/logout" style="margin:0"><button class="icon-btn" title="Баромад">🚪</button></form>
+      <% } else { %>
+        <a class="icon-btn" href="/cart" title="Сабад">
+          🛒<span class="count" id="cartCount" style="<%= cartCount > 0 ? '' : 'display:none' %>"><%= cartCount %></span>
+        </a>
+        <a class="btn btn-primary btn-sm" href="/login">Воридшавӣ</a>
+        <a class="btn btn-outline btn-sm" href="/register">Бақайдгирӣ</a>
+      <% } %>
+    </div>
+  </div>
+  <% if (typeof hideMobileSearch === 'undefined') { %>
+  <div class="mobile-search" style="display:none">
+    <form action="/catalog" method="get">
+      <input type="text" name="q" placeholder="🔍 Ҷустуҷӯ...">
+    </form>
+  </div>
+  <style>@media(max-width:900px){.mobile-search{display:block!important}}</style>
+  <% } %>
+</header>
+<nav class="cat-strip">
+  <div class="cat-strip-in">
+    <a class="cat-chip <%= path === '/catalog' && !activeCat ? 'active' : '' %>" href="/catalog">🧸 Ҳама</a>
+    <% categories.forEach(c => { %>
+      <a class="cat-chip <%= activeCat && activeCat.id === c.id ? 'active' : '' %>" href="/catalog?category=<%= c.id %>">
+        <span class="ic"><%= c.icon %></span><%= c.name %>
+      </a>
+    <% }) %>
+  </div>
+</nav>

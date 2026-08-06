@@ -1,0 +1,102 @@
+<%- include('../partials/head', {title}) %>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main class="container">
+  <div class="pg">
+    <!-- gallery -->
+    <div class="pg-gallery reveal">
+      <div class="main-img">
+        <% if (product.discount > 0) { %>
+          <span class="badge badge-discount" style="position:absolute;top:14px;left:14px;z-index:2;font-size:13px;padding:5px 13px">-%<%= product.discount %></span>
+        <% } %>
+        <img src="<%= product.image %>" alt="<%= product.title %>">
+      </div>
+    </div>
+
+    <!-- info -->
+    <div class="pg-info reveal reveal-d1">
+      <a href="/catalog?category=<%= cat.id %>" class="small muted">← <%= cat.icon %> <%= cat.name %></a>
+      <h1><%= product.title %></h1>
+      <div class="pg-rating">
+        <span class="stars"><% for (let s = 0; s < 5; s++) { %><%= s < Math.round(product.rating) ? '★' : '☆' %><% } %></span>
+        <b><%= product.rating.toFixed(1) %></b>
+        <span class="muted">· <%= product.rating_count %> баҳо · <%= product.rating_count * 3 %> харид</span>
+      </div>
+
+      <div class="pg-price-box">
+        <span class="pg-price"><%= fmt(product.price) %></span>
+        <% if (product.old_price) { %><span class="pg-old"><%= fmt(product.old_price) %></span><% } %>
+        <% if (product.discount > 0) { %><span class="pg-save">Сарфаи <%= fmt(product.old_price - product.price) %></span><% } %>
+      </div>
+
+      <div id="productData" data-id="<%= product.id %>" data-sizes="<%= product.has_sizes %>" data-stock="<%= product.stock %>"></div>
+
+      <% if (product.has_sizes) { %>
+        <div class="mt-16">
+          <b style="font-size:14px">Андоза: <span id="stockInfo" class="muted small"></span></b>
+          <div class="size-select">
+            <% product.sizes.map(s => ({...s, inStock: true})).concat([]).forEach(s => { %>
+              <button class="size-btn" data-size="<%= s.size %>" data-stock="<%= s.stock %>"><%= s.size %></button>
+            <% }) %>
+          </div>
+        </div>
+      <% } else { %>
+        <div class="mt-16"><b style="font-size:14px"><span id="stockInfo" class="muted small"></span></b></div>
+      <% } %>
+
+      <div class="qty-row">
+        <div class="qty">
+          <button id="qtyMinus" type="button">−</button>
+          <input id="qtyInput" type="text" value="1" readonly>
+          <button id="qtyPlus" type="button">+</button>
+        </div>
+      </div>
+
+      <div class="pg-actions">
+        <button class="btn btn-primary btn-lg" id="btnAddCart">🛒 Ба сабад</button>
+        <button class="btn btn-dark btn-lg" id="btnBuyNow">⚡ Фавран харидан</button>
+      </div>
+
+      <div class="benefits" style="grid-template-columns:repeat(3,1fr);margin:26px 0 0">
+        <div class="benefit"><span class="b-ic">🚚</span><div><b>Дастрасӣ</b><span>1-2 рӯз</span></div></div>
+        <div class="benefit"><span class="b-ic">🛡</span><div><b>Кафолат</b><span>14 рӯз</span></div></div>
+        <div class="benefit"><span class="b-ic">🔄</span><div><b>Баргардонӣ</b><span>Осон</span></div></div>
+      </div>
+
+      <!-- tabs -->
+      <div class="pg-tabs">
+        <div class="tab-head">
+          <button class="tab-btn active" data-tab="desc">📖 Тавсиф</button>
+          <button class="tab-btn" data-tab="ship">🚚 Расул</button>
+          <button class="tab-btn" data-tab="return">🔄 Баргардонӣ</button>
+        </div>
+        <div class="tab-body">
+          <div class="tab-pane" id="desc"><%= product.description %></div>
+          <div class="tab-pane" id="ship" style="display:none">
+            <b>Усулҳои дастрасӣ:</b>
+            <ul style="margin-top:8px">
+              <li>🚚 Курьер то хона — 15 сом (аз 500 сом ройгон)</li>
+              <li>🏬 Гирифтан аз магазин — ройгон</li>
+            </ul>
+          </div>
+          <div class="tab-pane" id="return" style="display:none">
+            Маҳсулотро дар давоми <b>14 рӯз</b> баргардонидан мумкин, агар баста кушода нашуда бошад ва нишонаҳои истифода набошад.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- similar -->
+  <% if (similar.length > 0) { %>
+    <div class="sec-head reveal">
+      <div><h2>🤝 Маҳсулоти монанд</h2></div>
+    </div>
+    <div class="products-grid">
+      <% similar.forEach((p, i) => { %><%- include('../partials/pcard', {p, i}) %><% }) %>
+    </div>
+  <% } %>
+</main>
+
+<%- include('../partials/footer') %>

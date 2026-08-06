@@ -1,0 +1,69 @@
+<%- include('../partials/head', {title}) %>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main class="container">
+  <a href="/orders" class="small muted">← Фармоишҳо</a>
+  <h1 style="font-size:26px;margin:10px 0 4px">Фармоиш №<%= order.id %></h1>
+  <span class="muted small"><%= new Date(order.created_at + 'Z').toLocaleString('ru-RU') %></span>
+
+  <!-- timeline -->
+  <div class="checkout-card" style="margin-top:18px">
+    <div class="timeline">
+      <% const steps = [
+        {key:'new', icon:'🕐', label:'Қабул шуд'},
+        {key:'confirmed', icon:'✅', label:'Тасдиқ шуд'},
+        {key:'shipped', icon:'🚚', label:'Дар роҳ'},
+        {key:'delivered', icon:'🎉', label:'Расонида шуд'},
+      ];
+      const orderIdx = steps.findIndex(s => s.key === order.status);
+      const cancelled = order.status === 'cancelled';
+      %>
+      <% steps.forEach((s, i) => { %>
+        <div class="tl-step <%= orderIdx >= i ? 'done' : (orderIdx === i - 0 && !cancelled ? '' : '') %> <%= orderIdx === i && !cancelled ? 'current' : '' %>">
+          <div class="dot"><%= cancelled && i === 0 ? '❌' : s.icon %></div>
+          <b><%= s.label %></b>
+          <span><%= orderIdx > i ? 'Ба анҷом расид' : orderIdx === i ? 'Ҳоло' : '' %></span>
+        </div>
+      <% }) %>
+    </div>
+    <% if (cancelled) { %>
+      <div class="alert alert-error" style="margin:0">Фармоиш бекор карда шуд. Барои саволҳо ба дастгирӣ муроҷиат кунед.</div>
+    <% } %>
+  </div>
+
+  <div class="order-detail-grid">
+    <div class="checkout-card">
+      <h3>🧾 Молҳои фармоиш</h3>
+      <% items.forEach(it => { %>
+        <div class="flex gap-12" style="padding:10px 0;border-bottom:1px dashed var(--border);align-items:center">
+          <img src="<%= it.image %>" style="width:58px;height:58px;border-radius:11px;object-fit:cover" alt="">
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:700;font-size:14px"><%= it.title %></div>
+            <div class="small muted"><%= it.size ? 'Андоза ' + it.size + ' · ' : '' %><%= it.qty %> × <%= fmt(it.price) %></div>
+          </div>
+          <b><%= fmt(it.price * it.qty) %></b>
+        </div>
+      <% }) %>
+      <div class="sum-row" style="margin-top:12px"><span>Маҳсулот</span><span><%= fmt(order.subtotal) %></span></div>
+      <div class="sum-row"><span>Дастрасӣ</span><span><%= order.delivery_fee === 0 ? 'Ройгон' : fmt(order.delivery_fee) %></span></div>
+      <div class="sum-row total"><span>Ҳамагӣ</span><b><%= fmt(order.total) %></b></div>
+    </div>
+
+    <div>
+      <div class="checkout-card">
+        <h3>📍 Маълумоти дастрасӣ</h3>
+        <p style="font-size:14px"><b><%= order.customer_name %></b><br>
+        📞 <%= order.phone %><br>
+        🏙 <%= order.city %>, <%= order.address %></p>
+        <% if (order.comment) { %><p class="small muted">💬 <%= order.comment %></p><% } %>
+        <hr style="border:none;border-top:1px dashed var(--border);margin:12px 0">
+        <p class="small"><b>Пардохт:</b> <%= order.payment_method === 'cash' ? '💵 Нақдӣ' : order.payment_method === 'card' ? '💳 Корти банкӣ' : '📱 Терминал' %><br>
+        <b>Дастрасӣ:</b> <%= order.delivery_method === 'courier' ? '🚚 Курьер' : '🏬 Гирифтан аз магазин' %></p>
+      </div>
+      <a class="btn btn-ghost btn-block" href="/catalog">← Идомаи харид</a>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

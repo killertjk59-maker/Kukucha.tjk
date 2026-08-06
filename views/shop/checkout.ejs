@@ -1,0 +1,90 @@
+<%- include('../partials/head', {title}) %>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main class="container">
+  <div class="checkout-layout">
+    <form method="post" action="/checkout" class="reveal">
+      <div class="checkout-card">
+        <h3><span class="num">1</span> Маълумоти шумо</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Номи пурра *</label>
+            <input class="form-control" name="customer_name" value="<%= user.full_name %>" required>
+          </div>
+          <div class="form-group">
+            <label>Телефон *</label>
+            <input class="form-control" name="phone" value="<%= user.phone %>" placeholder="+992 9X XXX XX XX" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Шаҳр</label>
+            <input class="form-control" name="city" value="Хуҷанд">
+          </div>
+          <div class="form-group">
+            <label>Суроға *</label>
+            <input class="form-control" name="address" placeholder="Кӯча, хона, квартира" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Шарҳ (ихтиёрӣ)</label>
+          <textarea class="form-control" name="comment" placeholder="Агар чизе навиштан хоҳед..."></textarea>
+        </div>
+      </div>
+
+      <div class="checkout-card">
+        <h3><span class="num">2</span> Усули дастрасӣ</h3>
+        <label class="deliv-opt active">
+          <input type="radio" name="delivery_method" value="courier" checked>
+          <div><b>Курьер то хона</b><span>1-2 рӯз · аз 500 сом ройгон</span></div>
+          <span class="price">15 сом</span>
+        </label>
+        <label class="deliv-opt">
+          <input type="radio" name="delivery_method" value="pickup">
+          <div><b>Гирифтан аз магазин</b><span>Хуҷанд, ш. Истиқлол</span></div>
+          <span class="price" style="color:var(--success)">Ройгон</span>
+        </label>
+      </div>
+
+      <div class="checkout-card">
+        <h3><span class="num">3</span> Усули пардохт</h3>
+        <label class="pay-opt active">
+          <input type="radio" name="payment_method" value="cash" checked>
+          <div><b>Нақдӣ</b><span>Ҳангоми гирифтани фармоиш</span></div>
+        </label>
+        <label class="pay-opt">
+          <input type="radio" name="payment_method" value="card">
+          <div><b>Корти банкӣ</b><span>Пешакӣ ё ҳангоми дастрасӣ</span></div>
+        </label>
+        <label class="pay-opt">
+          <input type="radio" name="payment_method" value="terminal">
+          <div><b>Терминал</b><span>Ҳангоми дастрасӣ бо корти банкӣ</span></div>
+        </label>
+      </div>
+
+      <button class="btn btn-primary btn-lg btn-block" type="submit" style="padding:16px">✅ Тасдиқ ва фиристодани фармоиш</button>
+    </form>
+
+    <aside class="reveal reveal-d1">
+      <div class="summary-card">
+        <h3>Фармоиши шумо</h3>
+        <% items.forEach(it => { %>
+          <div class="flex gap-12" style="padding:9px 0;border-bottom:1px dashed var(--border);align-items:center">
+            <img src="<%= it.product.image %>" style="width:52px;height:52px;border-radius:10px;object-fit:cover" alt="">
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><%= it.product.title %></div>
+              <div class="small muted"><%= it.size ? 'Андоза ' + it.size + ' · ' : '' %><%= it.qty %> × <%= fmt(it.product.price) %></div>
+            </div>
+            <b style="font-size:14px;white-space:nowrap"><%= fmt(it.lineTotal) %></b>
+          </div>
+        <% }) %>
+        <div class="sum-row" style="margin-top:12px"><span>Маҳсулот</span><span><%= fmt(totals.subtotal) %></span></div>
+        <div class="sum-row"><span>Дастрасӣ (курьер)</span><span id="deliveryFee">+ 15 сом</span></div>
+        <div class="sum-row total"><span>Ҳамагӣ</span><b id="totalSum" data-subtotal="<%= totals.subtotal %>"><%= fmt(totals.subtotal + 15) %></b></div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

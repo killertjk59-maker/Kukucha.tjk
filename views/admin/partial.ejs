@@ -1,0 +1,20 @@
+<div class="admin-layout">
+  <aside class="admin-side">
+    <a href="/" class="logo">
+      <span class="logo-mark">🧸</span>
+      <span><b>Kukucha</b>админ</span>
+    </a>
+    <a class="admin-nav-item <%= path === '/admin' ? 'active' : '' %>" href="/admin">📊 Дашборд</a>
+    <a class="admin-nav-item <%= path.startsWith('/admin/products') ? 'active' : '' %>" href="/admin/products">📦 Маҳсулотҳо</a>
+    <a class="admin-nav-item <%= path.startsWith('/admin/categories') ? 'active' : '' %>" href="/admin/categories">🗂 Категорияҳо</a>
+    <a class="admin-nav-item <%= path.startsWith('/admin/orders') ? 'active' : '' %>" href="/admin/orders">
+      📋 Фармоишҳo
+      <% if (typeof stats !== 'undefined' && stats.newOrders > 0) { %><span class="count"><%= stats.newOrders %></span><% } %>
+    </a>
+    <a class="admin-nav-item <%= path.startsWith('/admin/users') ? 'active' : '' %>" href="/admin/users">👥 Истифодабарандагон</a>
+    <div style="border-top:1px solid var(--border);margin:14px 10px"></div>
+    <a class="admin-nav-item" href="/">🏠 Ба магазин</a>
+    <a class="admin-nav-item" href="/profile">👤 Профил</a>
+    <form method="post" action="/logout" style="margin:0"><button class="admin-nav-item" style="width:100%;background:none;border:none;cursor:pointer;text-align:left">🚪 Баромад</button></form>
+  </aside>
+  <main class="admin-main">

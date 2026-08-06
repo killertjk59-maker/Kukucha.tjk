@@ -1,0 +1,50 @@
+<%- include('../partials/head', {title}) %>
+<%- include('partial') %>
+<%- include('../partials/flash') %>
+
+<div class="admin-head">
+  <h1>🗂 Категорияҳо</h1>
+</div>
+
+<div class="admin-grid-2">
+  <div class="admin-card">
+    <h3>➕ Категорияи нав</h3>
+    <form method="post" action="/admin/categories">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Ном *</label>
+          <input class="form-control" name="name" placeholder="Масалан: Либоси тифлона" required>
+        </div>
+        <div class="form-group">
+          <label>Иконка (эмодзи)</label>
+          <input class="form-control" name="icon" value="🧸" placeholder="🧸">
+        </div>
+      </div>
+      <label class="form-check"><input type="checkbox" name="is_published" checked> Нашршуда</label>
+      <button class="btn btn-primary mt-16" type="submit">Сохтан</button>
+    </form>
+  </div>
+
+  <div class="admin-card">
+    <h3>📋 Категорияҳои мавҷуда</h3>
+    <% cats.forEach(c => { %>
+      <form method="post" action="/admin/categories/<%= c.id %>" class="size-row" style="border-bottom:1px dashed var(--border);padding:10px 0;margin:0">
+        <span style="font-size:22px"><%= c.icon %></span>
+        <input class="form-control" name="name" value="<%= c.name %>" required>
+        <input class="form-control" name="icon" value="<%= c.icon %>" style="width:64px;text-align:center">
+        <input class="form-control" type="number" name="sort_order" value="<%= c.sort_order %>" style="width:70px" title="Тартиб">
+        <label class="form-check" title="Нашр"><input type="checkbox" name="is_published" <%= c.is_published ? 'checked' : '' %>></label>
+        <button class="btn btn-ghost btn-sm" type="submit">OK</button>
+      </form>
+      <div class="flex items-center justify-between" style="padding:0 0 8px">
+        <span class="small muted"><%= c.count %> маҳсулот</span>
+        <form method="post" action="/admin/categories/<%= c.id %>/delete" onsubmit="return confirm('Категория нест карда шавад?')">
+          <button class="btn btn-danger btn-sm" type="submit">Нест</button>
+        </form>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+</main></div>
+<%- include('../partials/footer') %>

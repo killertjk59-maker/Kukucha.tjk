@@ -1,0 +1,58 @@
+<%- include('../partials/head', {title}) %>
+<%- include('partial') %>
+<%- include('../partials/flash') %>
+
+<div class="admin-head">
+  <h1>📦 Маҳсулотҳо</h1>
+  <a class="btn btn-primary" href="/admin/products/new">+ Маҳсулоти нав</a>
+</div>
+
+<div class="admin-card">
+  <div style="overflow-x:auto">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Маҳсулот</th><th>Категория</th><th>Нарх</th><th>Андозаҳо</th><th>Анбор</th><th>Баҳо</th><th>Ҳолат</th><th style="text-align:right">Амалҳо</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% products.forEach(p => { %>
+        <tr>
+          <td>
+            <div class="flex items-center gap-12">
+              <img class="thumb" src="<%= p.image %>" alt="">
+              <div style="min-width:0">
+                <b style="font-size:13.5px;display:block;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><%= p.title %></b>
+                <span class="small muted">ID <%= p.id %></span>
+              </div>
+            </div>
+          </td>
+          <td class="muted"><%= cats.find(c => c.id === p.category_id)?.name || '—' %></td>
+          <td><b><%= fmt(p.price) %></b><% if (p.old_price) { %><div class="small muted" style="text-decoration:line-through"><%= fmt(p.old_price) %></div><% } %></td>
+          <td><% if (p.has_sizes) { %><span class="small"><%= p.sizes.map(s => s.size + '×' + s.stock).join(', ') %></span><% } else { %><span class="muted small">—</span><% } %></td>
+          <td>
+            <% if (p.has_sizes) { %>
+              <span class="badge <%= p.totalStock === 0 ? 'badge-discount' : p.totalStock <= 5 ? 'badge-soft' : 'badge-new' %>"><%= p.totalStock %></span>
+            <% } else { %>
+              <span class="badge <%= p.stock === 0 ? 'badge-discount' : p.stock <= 5 ? 'badge-soft' : 'badge-new' %>"><%= p.stock %></span>
+            <% } %>
+          </td>
+          <td>⭐ <%= p.rating.toFixed(1) %></td>
+          <td><span class="badge <%= p.is_published ? 'badge-new' : 'badge-soft' %>"><%= p.is_published ? 'Нашр' : 'Пинҳон' %></span><% if (p.is_featured) { %> <span class="badge badge-hit">🔥</span><% } %></td>
+          <td>
+            <div class="actions">
+              <a class="btn btn-ghost btn-sm" href="/product/<%= p.id %>">Биниш</a>
+              <a class="btn btn-ghost btn-sm" href="/admin/products/<%= p.id %>/edit">Таҳрир</a>
+              <form method="post" action="/admin/products/<%= p.id %>/toggle"><button class="btn btn-ghost btn-sm" type="submit"><%= p.is_published ? '🙈' : '👁' %></button></form>
+              <form method="post" action="/admin/products/<%= p.id %>/delete" onsubmit="return confirm('Маҳсулот нест карда шавад?')"><button class="btn btn-danger btn-sm" type="submit">Нест</button></form>
+            </div>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+</main></div>
+<%- include('../partials/footer') %>

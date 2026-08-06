@@ -1,0 +1,54 @@
+<%- include('../partials/head', {title}) %>
+<%- include('../partials/header') %>
+<%- include('../partials/flash') %>
+
+<main class="container">
+  <div class="cart-layout">
+    <div class="reveal">
+      <h1 style="font-size:26px;margin-bottom:18px">🛒 Сабади харид <% if (items.length > 0) { %><span class="muted small">(<%= totals.count %> мол)</span><% } %></h1>
+
+      <% if (items.length === 0) { %>
+        <div class="empty" style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg)">
+          <span class="e-ic">🛒</span>
+          <h3>Сабад холӣ аст</h3>
+          <p>Ба магазин равед ва маҳсулоти дӯстдоштаатонро интихоб кунед.</p>
+          <a class="btn btn-primary btn-lg" href="/catalog">🧸 Ба каталог</a>
+        </div>
+      <% } else { %>
+        <% items.forEach(it => { %>
+          <div class="cart-item" data-pid="<%= it.productId %>" data-size="<%= it.size %>">
+            <a href="/product/<%= it.productId %>"><img src="<%= it.product.image %>" alt=""></a>
+            <div class="ci-body">
+              <button class="ci-remove" title="Нест кардан">✕</button>
+              <a class="ci-title" href="/product/<%= it.productId %>"><%= it.product.title %></a>
+              <div class="ci-size">
+                <% if (it.size) { %>Андоза: <b><%= it.size %></b> · <% } %>Нарх: <b><%= fmt(it.product.price) %></b>
+              </div>
+              <div class="ci-bottom">
+                <div class="qty">
+                  <button data-dir="minus" type="button">−</button>
+                  <input type="text" value="<%= it.qty %>" readonly>
+                  <button data-dir="plus" type="button">+</button>
+                </div>
+                <div class="ci-price"><%= fmt(it.lineTotal) %></div>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+
+    <aside class="reveal reveal-d1">
+      <div class="summary-card">
+        <h3>Хулосаи фармоиш</h3>
+        <div class="sum-row"><span>Маҳсулот (<%= totals.count %>)</span><span><%= fmt(totals.subtotal) %></span></div>
+        <div class="sum-row"><span>Дастрасӣ</span><span id="deliveryFee">Ҳангоми тасдиқ</span></div>
+        <div class="sum-row total"><span>Ҳамагӣ</span><b><%= fmt(totals.subtotal) %></b></div>
+        <a class="btn btn-primary btn-block btn-lg mt-16" href="/checkout">Тасдиқи фармоиш →</a>
+        <a class="btn btn-ghost btn-block mt-8" href="/catalog">Идомаи харид</a>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

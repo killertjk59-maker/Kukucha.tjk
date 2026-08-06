@@ -1,0 +1,64 @@
+<%- include('../partials/head', {title}) %>
+<%- include('../partials/header', {qs, activeCat}) %>
+<%- include('../partials/flash') %>
+
+<main class="container">
+  <div class="catalog-layout">
+    <!-- filters -->
+    <aside class="filter-card reveal">
+      <h3>⚙️ Филтрҳо</h3>
+      <form method="get" action="/catalog">
+        <% if (qs) { %><input type="hidden" name="q" value="<%= qs %>"><% } %>
+        <div class="filter-group">
+          <label>Категория</label>
+          <a class="filter-chip <%= !activeCat ? 'active' : '' %>" href="/catalog<%= qs ? '?q=' + encodeURIComponent(qs) : '' %>">🧸 Ҳама</a>
+          <% cats.forEach(c => { %>
+            <a class="filter-chip <%= activeCat && activeCat.id === c.id ? 'active' : '' %>" href="/catalog?category=<%= c.id %><%= qs ? '&q=' + encodeURIComponent(qs) : '' %>"><%= c.icon %> <%= c.name %></a>
+          <% }) %>
+        </div>
+        <div class="filter-group">
+          <label>Нарх (сом)</label>
+          <div class="filter-price">
+            <input type="number" name="min" placeholder="Аз" value="<%= min %>" min="0">
+            <span>—</span>
+            <input type="number" name="max" placeholder="То" value="<%= max %>" min="0">
+          </div>
+        </div>
+        <input type="hidden" name="sort" value="<%= sort %>">
+        <button class="btn btn-primary btn-block" type="submit">Татбиқ кардан</button>
+        <a class="btn btn-ghost btn-block mt-16" href="/catalog">Тоза кардан</a>
+      </form>
+    </aside>
+
+    <!-- products -->
+    <div>
+      <div class="catalog-top">
+        <% if (activeCat) { %><h2 style="font-size:22px"><%= activeCat.icon %> <%= activeCat.name %></h2>
+        <% } else if (qs) { %><h2 style="font-size:22px">🔍 Натиҷаи ҷустуҷӯ: «<%= qs %>»</h2>
+        <% } else { %><h2 style="font-size:22px">🧸 Ҳамаи маҳсулот</h2><% } %>
+        <span class="result-count"><%= items.length %> маҳсулот</span>
+        <select class="sort-select" onchange="location.href=this.value">
+          <option value="<%= qs ? '/catalog?q=' + encodeURIComponent(qs) : '/catalog' %>" <%= sort === 'new' ? 'selected' : '' %>>Навтарин</option>
+          <option value="<%= (qs ? '/catalog?q=' + encodeURIComponent(qs) : '/catalog') + '&sort=price_asc' %>" <%= sort === 'price_asc' ? 'selected' : '' %>>Нарх: аз паст ба боло</option>
+          <option value="<%= (qs ? '/catalog?q=' + encodeURIComponent(qs) : '/catalog') + '&sort=price_desc' %>" <%= sort === 'price_desc' ? 'selected' : '' %>>Нарх: аз боло ба паст</option>
+          <option value="<%= (qs ? '/catalog?q=' + encodeURIComponent(qs) : '/catalog') + '&sort=rating' %>" <%= sort === 'rating' ? 'selected' : '' %>>Баҳо: беҳтарин</option>
+        </select>
+      </div>
+
+      <% if (items.length === 0) { %>
+        <div class="empty">
+          <span class="e-ic">🔍</span>
+          <h3>Маҳсулот ёфт нашуд</h3>
+          <p>Фильтрҳоро тағйир диҳед ё калимаи дигар нависед.</p>
+          <a class="btn btn-primary" href="/catalog">Ҳамаи маҳсулот</a>
+        </div>
+      <% } else { %>
+        <div class="products-grid">
+          <% items.forEach((p, i) => { %><%- include('../partials/pcard', {p, i}) %><% }) %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
